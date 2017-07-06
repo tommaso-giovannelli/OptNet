@@ -1,35 +1,49 @@
 package optNet.model;
 
+import org.jgrapht.WeightedGraph;
+import org.jgrapht.graph.DefaultWeightedEdge;
+
+import sim.engine.SimState;
 import sim.engine.Steppable;
 import sim.util.Double2D;
 
-public class CAP {
+public class CAP implements Steppable {
 	
-	private String name;
+	public String name;
 	
-	private Double2D posizione; 
-	
-	private final int NUM_CAP = 4413; //numero dei Plant
+	public Double2D posizione; 
 
-	private double weeklyDemandValue; //domanda settimanale generata dal CAP 
+	public double weeklyDemandValue; //domanda settimanale generata dal CAP 
 
-	private double actualDemand; //domanda attuale, cioè la domanda nella settimana corrente
+	public double actualDemand; //domanda attuale (comprende anche la domanda non soddisfatta nelle settimane precedenti)
 	
-	private double totalDemand; //domanda totale che il CAP ha generato dall'inizio della simulazione 
+	public double totalDemand; //domanda totale che il CAP ha generato dall'inizio della simulazione 
 	
-	private double totalDemandSatisfied; //domanda totale del CAP che è stata soddisfatta dall'inizio della simulazione
+	public double totalDemandSatisfied; //domanda totale del CAP che è stata soddisfatta dall'inizio della simulazione
 	
-	private double distanceFromDc; //distanza in Km dal centro di distribuzione (DFT o DFL) al CAP
+	public double weekDemandSatisfied; //domanda soddisfatta nella settimana considerata
 	
-	private double numberOfTrip; //numero di viaggi compiuti dal mezzo di trasporto tra il CAP e il DFT/DFL
+	public double distanceFromDc; //distanza in Km dal centro di distribuzione (DFT o DFL) al CAP
 	
-	private double weekDemandSatisfied; //domanda settimanale soddisfatta
+	public double numberOfTrip; //numero di viaggi compiuti dal mezzo di trasporto tra il CAP e il DFT/DFL dall'inizio della simulazione
 	
-	private double kmTravelled; //numero di km percorsi per raggiungere i CAP dai DFL
+	public double transpCost; //costo totale di trasporto per raggiungere il CAP dal DFL
 	
-	private double transpCost; //costo totale di trasporto per raggiungere i CAP dai DFL
+	public WeightedGraph<Object, DefaultWeightedEdge> grafo;
+			
+	//private double kmTravelled; //numero di km percorsi per raggiungere i CAP dai DFL
 	
-	private final double TRANSP_CAPACITY = 0; //capacità del mezzo di trasporto
+	//MANCA COSTRUTTORE
 	
-	private final double KM_COST = 0; //costo al km
+	public void step(SimState state) { ////////////MASON
+		
+		Model model = (Model) state;
+		
+		this.grafo = model.grafo; 
+		
+		//processo OnRunInitialized
+		distanceFromDc //= leggi il peso dell'arco che unisce il CAP al Dc;
+	}
+	
 }
+

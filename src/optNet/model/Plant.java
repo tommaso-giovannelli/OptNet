@@ -1,15 +1,28 @@
 package optNet.model;
 
+import org.jgrapht.WeightedGraph;
+import org.jgrapht.graph.DefaultWeightedEdge;
+
+import sim.engine.SimState;
+import sim.engine.Steppable;
 import sim.util.Double2D;
 
-public class Plant {
+public class Plant implements Steppable {
 	
-	private String name;
+	public String name;
 	
-	private Double2D posizione; 
-	
-	private final int NUM_PLANT = 6; //numero dei Plant
+	public Double2D posizione; 
 
-	private int[] orderVector = new int[numPlant]; //array di dimensione 12; ogni elemento rappresenta l'ordine del corrispondente DFT
+	public int[] orderVector; //array di dimensione pari al numero di DFT; ogni elemento rappresenta l'ordine del corrispondente DFT
+	
+	public WeightedGraph<Object, DefaultWeightedEdge> grafo;
+	
+	public void step(SimState state) { ////////////MASON
+		
+		Model model = (Model) state;
+		
+		this.grafo = model.grafo; 		
+		
+	}
 	
 }

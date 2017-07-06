@@ -3,6 +3,10 @@ package optNet.connection;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -11,11 +15,56 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 public class POIReadExcelFile {
-	public static void main(String[] args) {
+	
+	List<RigaExcelCAP> list;
+	
+	//public static void main(String[] args) {
+	/**
+	 * @return Lista che fa le veci della tabella Excel riguardante i CAP (campi: nome,coordinataX,coordinataY,CAPWeeklyDemand)
+	 */
+	public List<RigaExcelCAP> riempiListaCAP() {
+		
 		try {
+			
+			list = new ArrayList<>();
+			
 			FileInputStream fileInputStream = new FileInputStream("Cap.xls");
 			HSSFWorkbook workbook = new HSSFWorkbook(fileInputStream);
-			HSSFSheet worksheet = workbook.getSheet("Cap");
+			HSSFSheet worksheet = workbook.getSheet("Cap"); //oppure HSSFSheet worksheet=wb.getSheetAt(0);
+			
+			HSSFRow row; 
+			//HSSFCell cell;
+
+			Iterator rows = worksheet.rowIterator();
+
+			while (rows.hasNext()) {
+				
+				rows.next(); //perchè nella prima riga c'è l'intestazione della tabella quindi la devo saltare
+				row = (HSSFRow) rows.next();
+
+				//Iterator cells = row.cellIterator();	
+				//while (cells.hasNext()) {
+					//cell=(HSSFCell) cells.next();
+				
+				HSSFCell cellB = row.getCell((short) 1);				
+				String valB = cellB.getStringCellValue();
+				
+				HSSFCell cellC = row.getCell((short) 2);				
+				int valC = (int) cellC.getNumericCellValue();
+				
+				HSSFCell cellE = row.getCell((short) 4);				
+				int valE = (int) cellE.getNumericCellValue();
+				
+				HSSFCell cellI = row.getCell((short) 8);				
+				String valI = cellI.getStringCellValue();
+				
+				RigaExcelCAP riga = new RigaExcelCAP(valB,valC,valE,valI);
+				
+				list.add(riga);
+				
+			}
+			
+			/* 
 			HSSFRow row1 = worksheet.getRow(0);
 			HSSFCell cellA1 = row1.getCell((short) 0);
 			String a1Val = cellA1.getStringCellValue();
@@ -24,16 +73,32 @@ public class POIReadExcelFile {
 			HSSFCell cellC1 = row1.getCell((short) 2);
 			boolean c1Val = cellC1.getBooleanCellValue();
 			HSSFCell cellD1 = row1.getCell((short) 3);
-			Date d1Val = cellD1.getDateCellValue();
 
 			System.out.println("A1: " + a1Val);
 			System.out.println("B1: " + b1Val);
 			System.out.println("C1: " + c1Val);
 			System.out.println("D1: " + d1Val);
+			*/
+			
 		} catch (FileNotFoundException e) {
+			
 			e.printStackTrace();
+			
 		} catch (IOException e) {
+			
 			e.printStackTrace();
 		}
+		
+		return list;
 	}
+	
+	/*
+	public static void main(String[] args) {
+		List<RigaExcelCAP> lista;
+		POIReadExcelFile prova = new POIReadExcelFile();
+		lista = prova.riempiListaCAP();
+		System.out.println(lista);
+	}
+	*/
+	
 }
