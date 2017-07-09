@@ -1,11 +1,13 @@
-package optNet.model;
+package optNet.model2;
 
 import java.util.List;
 
 import sim.engine.SimState;
+import sim.engine.Steppable;
+import sim.util.Bag;
 import sim.util.Double2D;
 
-public class DFL {
+public class DFL implements Steppable {
 
 	public String name;
 	
@@ -46,12 +48,33 @@ public class DFL {
 		this.inventoryWeight = initialStock;
 	}
 	
+	public void trovaDFTassociato(Model model) { 
+		
+		Bag vicini;
+		
+		int i = 0;
+		
+		do {
+			
+			i = i+1;
+			
+			vicini = new Bag(i);
+			
+			model.modelField.getNearestNeighbors(this.posizione, i, false, false, false, vicini);
+			
+		} while (!(vicini.get(i) instanceof DFT)); 
+		
+		DFTassociato = (DFT) vicini.get(i);
+		
+		DFTassociato.DFLassociati.add(this);
+		
+	}
+	
 	public void step(SimState state) { ////////////MASON
 		
 		Model model = (Model) state;
 		
-		this.grafo = model.grafo; 
-		
+		trovaDFTassociato(model);		
 		
 	}
 
@@ -85,7 +108,13 @@ public class DFL {
 			return false;
 		return true;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "DFL [name=" + name + ", posizione=" + posizione + ", DFTassociato=" + DFTassociato + ", CAPassociati="
+				+ CAPassociati + ", dFLWeeklyDemand=" + dFLWeeklyDemand + ", dFTOrder=" + dFTOrder
+				+ ", weekVolSatisfied=" + weekVolSatisfied + ", inventoryWeight=" + inventoryWeight + "]";
+	}
 	
 	
 }

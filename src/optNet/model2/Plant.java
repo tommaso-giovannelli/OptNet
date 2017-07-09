@@ -1,5 +1,6 @@
 package optNet.model2;
 
+import java.util.Arrays;
 import java.util.List;
 
 import sim.engine.SimState;
@@ -65,5 +66,12 @@ public class Plant implements Steppable {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "Plant [name=" + name + ", posizione=" + posizione + ", listaDFT=" + listaDFT + ", orderVector="
+				+ Arrays.toString(orderVector) + ", qtaProdotta=" + Arrays.toString(qtaProdotta) + "]";
+	}
+	
 	
 }

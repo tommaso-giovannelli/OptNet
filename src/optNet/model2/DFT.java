@@ -1,5 +1,6 @@
-package optNet.model;
+package optNet.model2;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +14,9 @@ public class DFT implements Steppable {
 	
 	public Double2D posizione; 
 	
-	public List<Object> clientiAssociati; //lista dei clienti che vengono serviti da questo DFT(possono essere DFL o CAP)
+	public List<CAP> CAPassociati; //lista dei CAP che vengono serviti da questo DFT
+	
+	public List<DFL> DFLassociati; //lista dei DFL che vengono serviti da questo DFT(possono essere DFL o CAP)
 	
 	public double dFTWeeklyDemand; //raggruppa tutta la domanda attuale pervenuta dai CAP da servire
 	
@@ -85,5 +88,15 @@ public class DFT implements Steppable {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "DFT [name=" + name + ", posizione=" + posizione + ", clientiAssociati=" + clientiAssociati
+				+ ", dFTWeeklyDemand=" + dFTWeeklyDemand + ", plantOrder=" + plantOrder + ", orderFromDFL="
+				+ orderFromDFL + ", inventoryWeight=" + inventoryWeight + ", volPlantDFT="
+				+ Arrays.toString(volPlantDFT) + "]";
+	}
+	
+	
 	
 }

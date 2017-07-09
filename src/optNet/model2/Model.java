@@ -1,6 +1,8 @@
 package optNet.model2;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import optNet.connection.POIReadExcelFile;
 import optNet.connection.RigaExcelCAP;
@@ -124,25 +126,6 @@ public class Model extends SimState {
 		}
 	}
 	
-	/**
-	 * metodo che associa ad ogni impianto l'impianto da cui sarà servito e/o l'impianto che servirà; tali info vengono memorizzate nei relativi campi di ogni oggetto
-	 */
-	public void creaSupplyChain() {
-		
-		
-	
-		//per ogni Plant memorizza i DFT 
-		manager.
-		
-		//per ogni DFL memorizza il DFT più vicino 
-		
-		//per ogni CAP memorizza il DFT o DFL più vicino 
-		
-		/////////MASON per trovare l'oggetto più vicino si potrebbe usare questa funzione:
-		/////////public Bag getNearestNeighbors(Double2D position,int atLeastThisMany,boolean toroidal,boolean nonPointObjects,boolean radial,Bag result)
-		
-	}
-	
 	
 	/**
 	 * dato il manager, il metodo legge il file sim_legge.txt e modifica il manager 
@@ -174,7 +157,7 @@ public class Model extends SimState {
 	 * @return il numero di DFT 
 	 */
 	public int contaDFT() { //conta il numero di oggetti che sono DFT
-		
+		return this.manager.mapDFT.size();
 	}
 	
 	
@@ -182,7 +165,7 @@ public class Model extends SimState {
 	 * @return il numero di DFL
 	 */
 	public int contaDFL() { //conta il numero di oggetti che sono DFT
-		
+		return this.manager.mapDFL.size();
 	}
 	
 	
@@ -191,11 +174,36 @@ public class Model extends SimState {
 		
 		super.start();
 		
+		creaImpianti();
+		
 		numDFT = contaDFT();
 		
 		numDFL = contaDFL();
 		
-		//inserire nello Schedule gli impianti memorizzati nel manager  
+		//inserisco nello Schedule gli impianti memorizzati nel manager 
+		for (Map.Entry<String, CAP> entry : manager.mapCAP.entrySet()) {
+			CAP cap = entry.getValue();
+			modelField.setObjectLocation(cap, cap.posizione );
+			schedule.scheduleOnce(Schedule.EPOCH, 0, cap);
+		}
+		
+		for (Map.Entry<String, DFL> entry : manager.mapDFL.entrySet()) {
+			DFL dfl = entry.getValue();
+			modelField.setObjectLocation(dfl, dfl.posizione );
+			schedule.scheduleOnce(Schedule.EPOCH, 0, dfl);
+		}
+		
+		for (Map.Entry<String, DFT> entry : manager.mapDFT.entrySet()) {
+			DFT dft = entry.getValue();
+			modelField.setObjectLocation(dft, dft.posizione );
+			schedule.scheduleOnce(Schedule.EPOCH, 0, dft);
+		}
+		
+		for (Map.Entry<String, Plant> entry : manager.mapPlant.entrySet()) {
+			Plant plant = entry.getValue();
+			modelField.setObjectLocation(plant, plant.posizione );
+			schedule.scheduleOnce(Schedule.EPOCH, 0, plant);
+		}
 		
 		//da completare
 	}	

@@ -5,13 +5,13 @@ import java.util.Map;
 
 public class Manager {
 	
-	private Map<String,CAP> mapCAP;
+	public Map<String,CAP> mapCAP;
 	
-	private Map<String,DFT> mapDFT;
+	public Map<String,DFT> mapDFT;
 	
-	private Map<String,DFL> mapDFL;
+	public Map<String,DFL> mapDFL;
 	
-	private Map<String,Plant> mapPlant;
+	public Map<String,Plant> mapPlant;
 
 	public Manager() {
 		super();

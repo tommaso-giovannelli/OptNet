@@ -1,10 +1,12 @@
-package optNet.model;
+package optNet.model2;
 
 import org.jgrapht.WeightedGraph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 
+import sim.engine.Schedule;
 import sim.engine.SimState;
 import sim.engine.Steppable;
+import sim.util.Bag;
 import sim.util.Double2D;
 
 public class CAP implements Steppable {
@@ -13,7 +15,9 @@ public class CAP implements Steppable {
 	
 	public Double2D posizione; 
 	
-	public Object impiantoAssociato; //il centro di distribuzione che serve il CAP (può essere un DFT o DFL)
+	public DFT DFTassociato; //il DFT che serve il CAP (è null se il CAP è servito da un DFL)
+	
+	public DFL DFLassociato; //il DFL che serve il CAP (è null se il CAP è servito da un DFT)
 
 	public double weeklyDemandValue; //domanda settimanale generata dal CAP 
 
@@ -47,14 +51,49 @@ public class CAP implements Steppable {
 		this.transpCost = 0;
 	}
 	
+	public void trovaImpiantoAssociato(Model model) { 
+		
+		Bag vicini;		
+		int i = 0;
+		
+		do {			
+			i = i+1;			
+			vicini = new Bag(i);			
+			model.modelField.getNearestNeighbors(this.posizione, i, false, false, false, vicini);
+			
+		} while (!(vicini.get(i) instanceof DFT) || (!(vicini.get(i) instanceof DFL))); 
+		
+		if (vicini.get(i) instanceof DFT) {	
+			
+			DFTassociato = (DFT) vicini.get(i);		
+			DFTassociato.CAPassociati.add(this);
+			
+		} else if (vicini.get(i) instanceof DFL) {
+			
+			DFLassociato = (DFL) vicini.get(i);
+			DFLassociato.CAPassociati.add(this);
+			
+		} else {		
+			
+			throw new IllegalStateException("ATTENZIONE: A monte del CAP non c'è un DFT o un DFL associato");
+			
+		}
+		
+	}
+	
 	public void step(SimState state) { ////////////MASON
 		
 		Model model = (Model) state;
 		
-		this.grafo = model.grafo; 
+		trovaImpiantoAssociato(model);
 		
 		//processo OnRunInitialized
-		distanceFromDc //= leggi il peso dell'arco che unisce il CAP al Dc;
+		if (DFTassociato != null)
+			distanceFromDc = this.posizione.distance(DFTassociato.posizione); //distanza il CAP e il DFT associato;
+		else if (DFL != null)
+			distanceFromDc = this.posizione.distance(DFTassociato.posizione); //distanza il CAP e il DFL associato;
+		else
+			throw new IllegalStateException("ATTENZIONE: A monte del CAP non c'è un DFT o un DFL associato");
 	}
 
 	@Override
@@ -86,6 +125,15 @@ public class CAP implements Steppable {
 		} else if (!posizione.equals(other.posizione))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "CAP [name=" + name + ", posizione=" + posizione + ", impiantoAssociato=" + impiantoAssociato
+				+ ", weeklyDemandValue=" + weeklyDemandValue + ", actualDemand=" + actualDemand + ", totalDemand="
+				+ totalDemand + ", totalDemandSatisfied=" + totalDemandSatisfied + ", weekDemandSatisfied="
+				+ weekDemandSatisfied + ", distanceFromDc=" + distanceFromDc + ", numberOfTrip=" + numberOfTrip
+				+ ", transpCost=" + transpCost + ", kmTravelled=" + kmTravelled + "]";
 	}
 	
 	
