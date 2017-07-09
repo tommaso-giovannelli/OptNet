@@ -1,7 +1,6 @@
-package optNet.model;
+package optNet.model2;
 
-import org.jgrapht.WeightedGraph;
-import org.jgrapht.graph.DefaultWeightedEdge;
+import java.util.List;
 
 import sim.engine.SimState;
 import sim.engine.Steppable;
@@ -12,21 +11,20 @@ public class Plant implements Steppable {
 	public String name;
 	
 	public Double2D posizione; 
+	
+	public List<DFT> listaDFT;
 
 	public double[] orderVector; //array di dimensione pari al numero di DFT; ogni elemento rappresenta l'ordine del corrispondente DFT
 	
 	public double[] qtaProdotta; //array di dimensione pari al numero di DFT; ogni elemento rappresenta la quantità prodotta per il corrispondente DFT
-
-	public WeightedGraph<Object, DefaultWeightedEdge> grafo;
 	
 	//costruttore
-	public Plant(String name, Double2D posizione, double[] orderVector, double[] qtaProdotta, WeightedGraph<Object, DefaultWeightedEdge> grafo) {
+	public Plant(String name, Double2D posizione) {
 		super();
 		this.name = name;
 		this.posizione = posizione;
-		this.orderVector = orderVector;
-		this.qtaProdotta = qtaProdotta;
-		this.grafo = grafo;
+		this.orderVector = new double[0];
+		this.qtaProdotta = new double[0];
 	}
 
 	public void step(SimState state) { ////////////MASON

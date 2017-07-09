@@ -1,7 +1,6 @@
 package optNet.model;
 
-import org.jgrapht.WeightedGraph;
-import org.jgrapht.graph.DefaultWeightedEdge;
+import java.util.List;
 
 import sim.engine.SimState;
 import sim.util.Double2D;
@@ -12,6 +11,10 @@ public class DFL {
 	
 	public Double2D posizione; 
 	
+	public DFT DFTassociato; //DFT che serve questo DFL
+	
+	public List<CAP> CAPassociati; //lista dei CAP che vengono serviti da questo DFL
+	
 	public double dFLWeeklyDemand; //domanda generata dai CAP di competenza che il DFL deve soddisfare
 
 	public double dFTOrder; //ordine di prodotto inviato al DFT
@@ -19,8 +22,6 @@ public class DFL {
 	public double weekVolSatisfied; //volume di prodotto ricevuto dal DFT nella settimana considerata
 	
 	public double inventoryWeight; //scorte
-	
-	public WeightedGraph<Object, DefaultWeightedEdge> grafo;
 	
 	//private double[] kmVolDFTDFL; //vettore a 2 componenti che tiene conto della distanza dal DFT da cui viene servito e della quantità di prodotto che è stata consegnata al DFL
 	
@@ -35,15 +36,14 @@ public class DFL {
 	//private final double KM_COST; //costo al km
 	
 	//costruttore
-	public DFL(String name, Double2D posizione, double dFLWeeklyDemand, double dFTOrder, double weekVolSatisfied, double inventoryWeight, WeightedGraph<Object, DefaultWeightedEdge> grafo) {
+	public DFL(String name, Double2D posizione, double initialStock) {
 		super();
 		this.name = name;
 		this.posizione = posizione;
-		this.dFLWeeklyDemand = dFLWeeklyDemand;
-		this.dFTOrder = dFTOrder;
-		this.weekVolSatisfied = weekVolSatisfied;
-		this.inventoryWeight = inventoryWeight;
-		this.grafo = grafo;
+		this.dFLWeeklyDemand = 0;
+		this.dFTOrder = 0;
+		this.weekVolSatisfied = 0;
+		this.inventoryWeight = initialStock;
 	}
 	
 	public void step(SimState state) { ////////////MASON

@@ -16,9 +16,14 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 public class POIReadExcelFile {
 	
-	List<RigaExcelCAP> list;
+	public List<RigaExcelCAP> listCAP;
 	
-	//public static void main(String[] args) {
+	public List<RigaExcelDFT> listDFT;
+	
+	public List<RigaExcelDFL> listDFL;
+	
+	public List<RigaExcelPlant> listPlant;
+	
 	/**
 	 * @return Lista che fa le veci della tabella Excel riguardante i CAP (campi: nome,coordinataX,coordinataY,CAPWeeklyDemand)
 	 */
@@ -26,7 +31,7 @@ public class POIReadExcelFile {
 		
 		try {
 			
-			list = new ArrayList<>();
+			listCAP = new ArrayList<>();
 			
 			FileInputStream fileInputStream = new FileInputStream("Cap.xls");
 			HSSFWorkbook workbook = new HSSFWorkbook(fileInputStream);
@@ -60,7 +65,7 @@ public class POIReadExcelFile {
 				
 				RigaExcelCAP riga = new RigaExcelCAP(valB,valC,valE,valI);
 				
-				list.add(riga);
+				listCAP.add(riga);
 				
 			}
 			
@@ -89,8 +94,194 @@ public class POIReadExcelFile {
 			e.printStackTrace();
 		}
 		
-		return list;
+		return listCAP;
 	}
+	
+	/**
+	 * @return Lista che fa le veci della tabella Excel riguardante i DFT (campi: nome,coordinataX,coordinataY,S,s_,EOQ,initialStock)
+	 */
+	public List<RigaExcelDFT> riempiListaDFT() {
+		
+		try {
+			
+			listDFT = new ArrayList<>();
+			
+			FileInputStream fileInputStream = new FileInputStream("DFT.xls");
+			HSSFWorkbook workbook = new HSSFWorkbook(fileInputStream);
+			HSSFSheet worksheet = workbook.getSheet("DFT"); //oppure HSSFSheet worksheet=wb.getSheetAt(0);
+			
+			HSSFRow row; 
+			//HSSFCell cell;
+
+			Iterator rows = worksheet.rowIterator();
+
+			while (rows.hasNext()) {
+				
+				rows.next(); //perchè nella prima riga c'è l'intestazione della tabella quindi la devo saltare
+				row = (HSSFRow) rows.next();
+
+				//Iterator cells = row.cellIterator();	
+				//while (cells.hasNext()) {
+					//cell=(HSSFCell) cells.next();
+				
+				HSSFCell cellB = row.getCell((short) 1);				
+				String valB = cellB.getStringCellValue();
+				
+				HSSFCell cellC = row.getCell((short) 2);				
+				int valC = (int) cellC.getNumericCellValue();
+				
+				HSSFCell cellE = row.getCell((short) 4);				
+				int valE = (int) cellE.getNumericCellValue();
+				
+				HSSFCell cellG = row.getCell((short) 8);				
+				double valG = cellG.getNumericCellValue();
+				
+				HSSFCell cellH = row.getCell((short) 8);				
+				double valH = cellH.getNumericCellValue();
+				
+				HSSFCell cellI = row.getCell((short) 8);				
+				double valI = cellI.getNumericCellValue();
+				
+				HSSFCell cellJ = row.getCell((short) 8);				
+				double valJ = cellJ.getNumericCellValue();
+				
+				RigaExcelDFT riga = new RigaExcelDFT(valB,valC,valE,valG,valH,valI,valJ);
+				
+				listDFT.add(riga);
+				
+			}
+			
+		} catch (FileNotFoundException e) {
+			
+			e.printStackTrace();
+			
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+		}
+		
+		return listDFT;
+	}
+	
+	/**
+	 * @return Lista che fa le veci della tabella Excel riguardante i DFL (campi: nome,coordinataX,coordinataY,S,s_,EOQ,initialStock)
+	 */
+	public List<RigaExcelDFL> riempiListaDFL() {
+		
+		try {
+			
+			listDFL = new ArrayList<>();
+			
+			FileInputStream fileInputStream = new FileInputStream("DFL.xls");
+			HSSFWorkbook workbook = new HSSFWorkbook(fileInputStream);
+			HSSFSheet worksheet = workbook.getSheet("DFL"); //oppure HSSFSheet worksheet=wb.getSheetAt(0);
+			
+			HSSFRow row; 
+			//HSSFCell cell;
+
+			Iterator rows = worksheet.rowIterator();
+
+			while (rows.hasNext()) {
+				
+				rows.next(); //perchè nella prima riga c'è l'intestazione della tabella quindi la devo saltare
+				row = (HSSFRow) rows.next();
+
+				//Iterator cells = row.cellIterator();	
+				//while (cells.hasNext()) {
+					//cell=(HSSFCell) cells.next();
+				
+				HSSFCell cellB = row.getCell((short) 1);				
+				String valB = cellB.getStringCellValue();
+				
+				HSSFCell cellC = row.getCell((short) 2);				
+				int valC = (int) cellC.getNumericCellValue();
+				
+				HSSFCell cellE = row.getCell((short) 4);				
+				int valE = (int) cellE.getNumericCellValue();
+				
+				HSSFCell cellG = row.getCell((short) 8);				
+				double valG = cellG.getNumericCellValue();
+				
+				HSSFCell cellH = row.getCell((short) 8);				
+				double valH = cellH.getNumericCellValue();
+				
+				HSSFCell cellI = row.getCell((short) 8);				
+				double valI = cellI.getNumericCellValue();
+				
+				HSSFCell cellJ = row.getCell((short) 8);				
+				double valJ = cellJ.getNumericCellValue();
+				
+				RigaExcelDFL riga = new RigaExcelDFL(valB,valC,valE,valG,valH,valI,valJ);
+				
+				listDFL.add(riga);
+				
+			}
+			
+		} catch (FileNotFoundException e) {
+			
+			e.printStackTrace();
+			
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+		}
+		
+		return listDFL;
+	}
+	
+	/**
+	 * @return Lista che fa le veci della tabella Excel riguardante i Plant (campi: nome,coordinataX,coordinataY)
+	 */
+	public List<RigaExcelPlant> riempiListaPlant() {
+		
+		try {
+			
+			listPlant = new ArrayList<>();
+			
+			FileInputStream fileInputStream = new FileInputStream("Plant.xls");
+			HSSFWorkbook workbook = new HSSFWorkbook(fileInputStream);
+			HSSFSheet worksheet = workbook.getSheet("Plant"); //oppure HSSFSheet worksheet=wb.getSheetAt(0);
+			
+			HSSFRow row; 
+			//HSSFCell cell;
+
+			Iterator rows = worksheet.rowIterator();
+
+			while (rows.hasNext()) {
+				
+				rows.next(); //perchè nella prima riga c'è l'intestazione della tabella quindi la devo saltare
+				row = (HSSFRow) rows.next();
+
+				//Iterator cells = row.cellIterator();	
+				//while (cells.hasNext()) {
+					//cell=(HSSFCell) cells.next();
+				
+				HSSFCell cellB = row.getCell((short) 1);				
+				String valB = cellB.getStringCellValue();
+				
+				HSSFCell cellC = row.getCell((short) 2);				
+				int valC = (int) cellC.getNumericCellValue();
+				
+				HSSFCell cellE = row.getCell((short) 4);				
+				int valE = (int) cellE.getNumericCellValue();
+				
+				RigaExcelPlant riga = new RigaExcelPlant(valB,valC,valE);
+				
+				listPlant.add(riga);
+				
+			}
+			
+		} catch (FileNotFoundException e) {
+			
+			e.printStackTrace();
+			
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+		}
+		
+		return listPlant;
+	}	
 	
 	/*
 	public static void main(String[] args) {

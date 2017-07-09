@@ -1,7 +1,7 @@
 package optNet.model;
 
-import org.jgrapht.WeightedGraph;
-import org.jgrapht.graph.DefaultWeightedEdge;
+import java.util.List;
+import java.util.Map;
 
 import sim.engine.SimState;
 import sim.engine.Steppable;
@@ -13,6 +13,8 @@ public class DFT implements Steppable {
 	
 	public Double2D posizione; 
 	
+	public List<Object> clientiAssociati; //lista dei clienti che vengono serviti da questo DFT(possono essere DFL o CAP)
+	
 	public double dFTWeeklyDemand; //raggruppa tutta la domanda attuale pervenuta dai CAP da servire
 	
 	public double plantOrder; //rappresenta il volume totale dell’ordine da inviare ai Plant
@@ -22,8 +24,6 @@ public class DFT implements Steppable {
 	public double inventoryWeight; //scorte
 	
 	public double[] volPlantDFT; //vettore che tiene conto della quantità totale che il DFT ha ricevuto dai Plant dall'inizio della simulazione
-	
-	public WeightedGraph<Object, DefaultWeightedEdge> grafo;
 	
 	//private double[] kmPlantDFT; //vettore che memorizza la distanza da ogni Plant
 	
@@ -36,16 +36,15 @@ public class DFT implements Steppable {
 	//private double kmTravelled; //chilometri percorsi per consegnare prodotti dai Plant al CDc  
 	
 	//costruttore
-	public DFT(String name, Double2D posizione, double dFTWeeklyDemand, double plantOrder, double orderFromDFL,	double inventoryWeight, double[] volPlantDFT, WeightedGraph<Object, DefaultWeightedEdge> grafo) {
+	public DFT(String name, Double2D posizione, double initialStock) {
 		super();
 		this.name = name;
 		this.posizione = posizione;
-		this.dFTWeeklyDemand = dFTWeeklyDemand;
-		this.plantOrder = plantOrder;
-		this.orderFromDFL = orderFromDFL;
-		this.inventoryWeight = inventoryWeight;
-		this.volPlantDFT = volPlantDFT;
-		this.grafo = grafo;
+		this.dFTWeeklyDemand = 0;
+		this.plantOrder = 0;
+		this.orderFromDFL = 0;
+		this.inventoryWeight = initialStock;
+		this.volPlantDFT = new double[0];
 	}
 	
 	public void step(SimState state) { ////////////MASON

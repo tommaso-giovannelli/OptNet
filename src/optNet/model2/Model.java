@@ -1,15 +1,19 @@
-package optNet.model;
+package optNet.model2;
 
-import org.jgrapht.WeightedGraph;
-import org.jgrapht.graph.DefaultWeightedEdge;
-import org.jgrapht.graph.SimpleWeightedGraph;
+import java.util.List;
 
-import packageMason.Tutorial1;
+import optNet.connection.POIReadExcelFile;
+import optNet.connection.RigaExcelCAP;
+import optNet.connection.RigaExcelDFL;
+import optNet.connection.RigaExcelDFT;
+import optNet.connection.RigaExcelPlant;
+
 import sim.engine.*;
 import sim.util.*;
 import sim.field.continuous.Continuous2D;
 
 public class Model extends SimState {
+	
 	
 	public double AllCapDemand; //domanda totale generata dai CAP nel periodo considerato
 	
@@ -47,85 +51,140 @@ public class Model extends SimState {
 	
 	public int numDFL; //numero dei DFL
 	
-	public WeightedGraph<Object, DefaultWeightedEdge> grafo; //grafo non orientato pesato in cui i nodi sono gli impianti della Supply Chain,
-															  //gli archi collegano due impianti associati e i pesi degli archi rappresentano
-															  //le distanze tra questi ultimi
+	public Manager manager; //contiene le informazioni di tutti gli oggetti, anche gli impianti associati a monte e a valle
+	
+	
 	
 	public Continuous2D modelField = new Continuous2D(1.0,width,height); ////////////MASON
+	
+	
 	
 	public Model(long seed) ////////////MASON
     {
     super(seed);
     }
 	
+	
+	
 	/**
-	 * metodo che legge il file sim_legge.txt e crea il grafo che ha come nodi i Plant, i CAP e i centri di distribuzione attivati 
+	 * metodo che legge il file sim_legge.txt, crea gli impianti e il manager e riempie quest'ultimo con i Plant, i CAP e i centri di distribuzione attivati 
 	 */
-	public void creaGrafo() {
+	public void creaImpianti() {
 		
-		this.grafo = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
+		this.manager = new Manager();
 		
-		//leggi info da CAP.csv e da Plant.csv
+		POIReadExcelFile poi = new POIReadExcelFile();
 		
-		//crea Plant e CAP letti dai file usando i relativi costruttori (tutti i fields vanno inizializzati a 0 eccetto nome e posizione)
+		List<RigaExcelCAP> listCAP = poi.riempiListaCAP();
+		
+		List<RigaExcelDFT> listDFT = poi.riempiListaDFT();
+		
+		List<RigaExcelDFL> listDFL = poi.riempiListaDFL();
+		
+		List<RigaExcelPlant> listPlant = poi.riempiListaPlant();
+		
+		//crea Plant e CAP leggendoli dai file di input (CAP.csv e Plant.csv) e usando i relativi costruttori (tutti i fields saranno inizializzati a 0 eccetto nome e posizione); aggiungi questi oggetti nel manager
+		for (RigaExcelCAP r : listCAP) {
+			
+			Double2D posizione = new Double2D((double) r.getCoordinataX(),(double) r.getCoordinataY()); //costruisco la posizione ricavando le coordinate da r
+			
+			CAP cap = new CAP(r.getNome(),posizione); //costruisco l'oggetto CAP
+			
+			manager.putCAP(cap); //inserisco l'oggetto nel manager
+		}
+		
+		for (RigaExcelPlant r : listPlant) {
+			
+			Double2D posizione = new Double2D((double) r.getCoordinataX(),(double) r.getCoordinataY());
+			
+			Plant plant = new Plant(r.getNome(),posizione);
+			
+			manager.putPlant(plant);
+		}
 		
 		//leggi file sim_legge.txt e determina i DFT e DFL da creare
 		
-		//leggi info da DFT.csv e DFL.csv
+		//crea DFT e DFL leggendoli dai file di input (DFT.csv e DFL.csv) e usando i relativi costruttori (tutti i fields saranno inizializzati a 0 eccetto nome e posizione); aggiungi questi oggetti nel manager
+		for (RigaExcelDFT r : listDFT) {
+			
+			Double2D posizione = new Double2D((double) r.getCoordinataX(),(double) r.getCoordinataY()); //costruisco la posizione ricavando le coordinate da r
+			
+			DFT dft = new DFT(r.getNome(),posizione, r.getInitialStock()); //costruisco l'oggetto CAP
+			
+			manager.putDFT(dft); //inserisco l'oggetto nel manager
+		}
 		
-		//crea DFT e DFL letti dai file usando i relativi costruttori (tutti i fields vanno inizializzati a 0 eccetto nome e posizione)
+		for (RigaExcelDFL r : listDFL) {
+			
+			Double2D posizione = new Double2D((double) r.getCoordinataX(),(double) r.getCoordinataY()); //costruisco la posizione ricavando le coordinate da r
+			
+			DFL dfl = new DFL(r.getNome(),posizione, r.getInitialStock()); //costruisco l'oggetto CAP
+			
+			manager.putDFL(dfl); //inserisco l'oggetto nel manager
+		}
+	}
+	
+	/**
+	 * metodo che associa ad ogni impianto l'impianto da cui sarà servito e/o l'impianto che servirà; tali info vengono memorizzate nei relativi campi di ogni oggetto
+	 */
+	public void creaSupplyChain() {
 		
-		//aggiungi questi oggetti come nodi del grafo
 		
-		//per ogni Plant crea un arco verso ogni DFT
+	
+		//per ogni Plant memorizza i DFT 
+		manager.
 		
-		//per ogni DFL crea un arco verso il DFT più vicino 
+		//per ogni DFL memorizza il DFT più vicino 
 		
-		//per ogni CAP crea un arco verso il DFT o DFL più vicino 
+		//per ogni CAP memorizza il DFT o DFL più vicino 
 		
 		/////////MASON per trovare l'oggetto più vicino si potrebbe usare questa funzione:
 		/////////public Bag getNearestNeighbors(Double2D position,int atLeastThisMany,boolean toroidal,boolean nonPointObjects,boolean radial,Bag result)
 		
 	}
 	
+	
 	/**
-	 * dato un grafo, il metodo legge il file sim_legge.txt e modifica il grafo 
+	 * dato il manager, il metodo legge il file sim_legge.txt e modifica il manager 
 	 * @throws Exception 
 	 */
-	public void modificaGrafo() {
+	public void modificaManager() {
 		
-		if (this.grafo == null) 
-			throw new NullPointerException("Non c'è nessun grafo da modificare");
+		if (this.manager == null) 
+			throw new NullPointerException("Il manager è vuoto");
 		
 		//leggi file sim_legge.txt
 		
 		//determina DFT e DFL da eliminare
 		
-		//elimina dal grafo i nodi associati a tali centri con il metodo: removeVertex(V v) (è importante ridefinire equals)
-		//e gli archi associati a tali nodi 
+		//elimina tali centri dal manager
 		
 		//determina i DFT e DFL da creare; per crearli leggi info da DFT.csv e DFL.csv
 		
 		//collega ogni DFT creato ai Plant
 		
-		//per ogni DFL cerca il DFT più vicino e se non è già presente un link, crealo
+		//per ogni DFL cerca il DFT più vicino e memorizzalo come DFTassociato; inoltre aggiungi il DFL nella lista dei DFL serviti dal DFT
 		
-		//per ogni CAP cerca il DFT o DFL più vicino e se non è già presente un link, crealo
+		//per ogni CAP cerca il DFT o DFL più vicino e memorizzalo come impianto associato; inoltre aggiungi il CAP nella lista dei CAP serviti dal DFL
+	
 	}
 	
+		
 	/**
 	 * @return il numero di DFT 
 	 */
-	public int contaDFT() { //conta il numero di vertici del grafo che sono DFT
+	public int contaDFT() { //conta il numero di oggetti che sono DFT
 		
 	}
+	
 	
 	/**
 	 * @return il numero di DFL
 	 */
-	public int contaDFL() { //conta il numero di vertici del grafo che sono DFT
+	public int contaDFL() { //conta il numero di oggetti che sono DFT
 		
 	}
+	
 	
 	//il metodo start fa iniziare la simulazione	
 	public void start() { ////////////MASON
@@ -136,11 +195,12 @@ public class Model extends SimState {
 		
 		numDFL = contaDFL();
 		
-		//inserire gli impianti associati ai nodi del grafo nello Schedule 
+		//inserire nello Schedule gli impianti memorizzati nel manager  
 		
 		//da completare
 	}	
 
+	
 	public static void main(String[] args) { ////////////MASON
 		
 		Model model = new Model(System.currentTimeMillis());

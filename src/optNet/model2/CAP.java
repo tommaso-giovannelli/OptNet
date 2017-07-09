@@ -12,6 +12,8 @@ public class CAP implements Steppable {
 	public String name;
 	
 	public Double2D posizione; 
+	
+	public Object impiantoAssociato; //il centro di distribuzione che serve il CAP (può essere un DFT o DFL)
 
 	public double weeklyDemandValue; //domanda settimanale generata dal CAP 
 
@@ -28,27 +30,21 @@ public class CAP implements Steppable {
 	public double numberOfTrip; //numero di viaggi compiuti dal mezzo di trasporto tra il CAP e il DFT/DFL dall'inizio della simulazione
 	
 	public double transpCost; //costo totale di trasporto per raggiungere il CAP dal DFL
-	
-	public WeightedGraph<Object, DefaultWeightedEdge> grafo;
 			
 	public double kmTravelled; //numero di km percorsi per raggiungere il CAP dal DFL
 	
 	//costruttore
-	public CAP(String name, Double2D posizione, double weeklyDemandValue, double actualDemand, double totalDemand,
-			double totalDemandSatisfied, double weekDemandSatisfied, double distanceFromDc, double numberOfTrip,
-			double transpCost, WeightedGraph<Object, DefaultWeightedEdge> grafo) {
+	public CAP(String name, Double2D posizione) {
 		super();
 		this.name = name;
 		this.posizione = posizione;
-		this.weeklyDemandValue = weeklyDemandValue;
-		this.actualDemand = actualDemand;
-		this.totalDemand = totalDemand;
-		this.totalDemandSatisfied = totalDemandSatisfied;
-		this.weekDemandSatisfied = weekDemandSatisfied;
-		this.distanceFromDc = distanceFromDc;
-		this.numberOfTrip = numberOfTrip;
-		this.transpCost = transpCost;
-		this.grafo = grafo;
+		this.weeklyDemandValue = 0;
+		this.actualDemand = 0;
+		this.totalDemand = 0;
+		this.totalDemandSatisfied = 0;
+		this.weekDemandSatisfied = 0;
+		this.numberOfTrip = 0;
+		this.transpCost = 0;
 	}
 	
 	public void step(SimState state) { ////////////MASON
