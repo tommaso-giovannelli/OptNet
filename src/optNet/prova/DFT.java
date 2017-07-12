@@ -57,7 +57,7 @@ public class DFT implements Steppable {
 		
 		Model model = (Model) state;
 		
-		this.volPlantDFT = new double[model.NUM_PLANT];
+		//this.volPlantDFT = new double[model.NUM_PLANT];
 		
 	}
 

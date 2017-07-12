@@ -1,4 +1,4 @@
-package optNet.prova;
+package optNet.model2;
 
 import sim.engine.SimState;
 import sim.engine.Steppable;

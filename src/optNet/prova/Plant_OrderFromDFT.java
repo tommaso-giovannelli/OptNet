@@ -27,7 +27,7 @@ public class Plant_OrderFromDFT implements Steppable {
 					
 			dft.inventoryWeight = dft.inventoryWeight + plant.qtaProdotta[indexForDFT];
 				
-			dft.volPlantDFT[indexForDFT] = dft.volPlantDFT[indexForDFT] + plant.qtaProdotta[indexForDFT];
+		//	dft.volPlantDFT[indexForDFT] = dft.volPlantDFT[indexForDFT] + plant.qtaProdotta[indexForDFT];
 				
 			dft.plantOrder = dft.plantOrder - plant.qtaProdotta[indexForDFT];
 			

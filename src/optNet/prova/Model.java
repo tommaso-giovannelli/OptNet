@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.math3.distribution.TriangularDistribution;
+
 import optNet.connection.POIReadExcelFile;
 import optNet.connection.RigaExcelCAP;
 import optNet.connection.RigaExcelDFL;
@@ -41,9 +43,9 @@ public class Model extends SimState {
 	
     public final double KM_COST = 0; //costo al km
 	
-	public int width = 100; //ampiezza del field model ////////////MASON
+	public int width = Integer.MAX_VALUE; //ampiezza del field model ////////////MASON
 	
-	public int height = 100; //altezza del field model ////////////MASON
+	public int height = Integer.MAX_VALUE; //altezza del field model ////////////MASON
 	
 	public final int NUM_PLANT = 6; //numero dei Plant
 	
@@ -88,20 +90,18 @@ public class Model extends SimState {
 		//crea Plant e CAP leggendoli dai file di input (CAP.csv e Plant.csv) e usando i relativi costruttori (tutti i fields saranno inizializzati a 0 eccetto nome e posizione); aggiungi questi oggetti nel manager
 		for (RigaExcelCAP r : listCAP) {
 			
-			Double2D posizione = new Double2D((double) r.getCoordinataX(),(double) r.getCoordinataY()); //costruisco la posizione ricavando le coordinate da r
+			Double2D posizione = new Double2D(r.getCoordinataX(), r.getCoordinataY()); //costruisco la posizione ricavando le coordinate da r
 			
-//			double CAPWeeklyDemand = Double.parseDouble(r.getCAPWeeklyDemand());
+			TriangularDistribution CAPWeeklyDemand = new TriangularDistribution(new MTFApache(random), r.getCAPWeeklyDemandMin(), r.getCAPWeeklyDemandMedio(), r.getCAPWeeklyDemandMax());
 			
-			double CAPWeeklyDemand = r.getCAPWeeklyDemand();
-			
-			CAP cap = new CAP(r.getNome(),posizione,CAPWeeklyDemand); //costruisco l'oggetto CAP
+			CAP cap = new CAP(r.getNome(),posizione,CAPWeeklyDemand.sample()); //costruisco l'oggetto CAP
 			
 			manager.putCAP(cap); //inserisco l'oggetto nel manager
 		}
 		
 		for (RigaExcelPlant r : listPlant) {
 			
-			Double2D posizione = new Double2D((double) r.getCoordinataX(),(double) r.getCoordinataY());
+			Double2D posizione = new Double2D(r.getCoordinataX(), r.getCoordinataY());
 			
 			Plant plant = new Plant(r.getNome(),posizione);
 			
@@ -113,7 +113,7 @@ public class Model extends SimState {
 		//crea DFT e DFL leggendoli dai file di input (DFT.csv e DFL.csv) e usando i relativi costruttori (tutti i fields saranno inizializzati a 0 eccetto nome e posizione); aggiungi questi oggetti nel manager
 		for (RigaExcelDFT r : listDFT) {
 			
-			Double2D posizione = new Double2D((double) r.getCoordinataX(),(double) r.getCoordinataY()); //costruisco la posizione ricavando le coordinate da r
+			Double2D posizione = new Double2D(r.getCoordinataX(), r.getCoordinataY()); //costruisco la posizione ricavando le coordinate da r
 			
 			DFT dft = new DFT(r.getNome(),posizione, r.getInitialStock()); //costruisco l'oggetto CAP
 			
@@ -122,7 +122,7 @@ public class Model extends SimState {
 		
 		for (RigaExcelDFL r : listDFL) {
 			
-			Double2D posizione = new Double2D((double) r.getCoordinataX(),(double) r.getCoordinataY()); //costruisco la posizione ricavando le coordinate da r
+			Double2D posizione = new Double2D(r.getCoordinataX(), r.getCoordinataY()); //costruisco la posizione ricavando le coordinate da r
 			
 			DFL dfl = new DFL(r.getNome(),posizione, r.getInitialStock()); //costruisco l'oggetto CAP
 			

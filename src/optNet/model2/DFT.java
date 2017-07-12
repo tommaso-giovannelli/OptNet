@@ -1,4 +1,4 @@
-package optNet.prova;
+package optNet.model2;
 
 import java.util.ArrayList;
 import java.util.Arrays;

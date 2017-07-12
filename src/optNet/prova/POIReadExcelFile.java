@@ -56,15 +56,21 @@ public class POIReadExcelFile {
 				String valB = cellB.getStringCellValue();
 				
 				HSSFCell cellC = row.getCell((short) 2);				
-				int valC = (int) cellC.getNumericCellValue();
+				double valC = cellC.getNumericCellValue();
 				
 				HSSFCell cellE = row.getCell((short) 4);				
-				int valE = (int) cellE.getNumericCellValue();
+				double valE = cellE.getNumericCellValue();
 				
 				HSSFCell cellI = row.getCell((short) 8);				
 				double valI = cellI.getNumericCellValue();
 				
-				RigaExcelCAP riga = new RigaExcelCAP(valB,valC,valE,valI);
+				HSSFCell cellJ = row.getCell((short) 9);				
+				double valJ = cellI.getNumericCellValue();
+				
+				HSSFCell cellK = row.getCell((short) 10);				
+				double valK = cellI.getNumericCellValue();
+				
+				RigaExcelCAP riga = new RigaExcelCAP(valB,valC,valE,valI,valJ,valK);
 				
 				listCAP.add(riga);
 				
@@ -129,10 +135,10 @@ public class POIReadExcelFile {
 				String valB = cellB.getStringCellValue();
 				
 				HSSFCell cellC = row.getCell((short) 2);				
-				int valC = (int) cellC.getNumericCellValue();
+				double valC = cellC.getNumericCellValue();
 				
 				HSSFCell cellE = row.getCell((short) 4);				
-				int valE = (int) cellE.getNumericCellValue();
+				double valE = cellE.getNumericCellValue();
 				
 				HSSFCell cellG = row.getCell((short) 6);				
 				double valG = cellG.getNumericCellValue();
@@ -195,10 +201,10 @@ public class POIReadExcelFile {
 				String valB = cellB.getStringCellValue();
 				
 				HSSFCell cellC = row.getCell((short) 2);				
-				int valC = (int) cellC.getNumericCellValue();
+				double valC = cellC.getNumericCellValue();
 				
 				HSSFCell cellE = row.getCell((short) 4);				
-				int valE = (int) cellE.getNumericCellValue();
+				double valE = cellE.getNumericCellValue();
 				
 				HSSFCell cellG = row.getCell((short) 6);				
 				double valG = cellG.getNumericCellValue();
@@ -261,10 +267,10 @@ public class POIReadExcelFile {
 				String valB = cellB.getStringCellValue();
 				
 				HSSFCell cellC = row.getCell((short) 2);				
-				int valC = (int) cellC.getNumericCellValue();
+				double valC = cellC.getNumericCellValue();
 				
 				HSSFCell cellE = row.getCell((short) 4);				
-				int valE = (int) cellE.getNumericCellValue();
+				double valE = cellE.getNumericCellValue();
 				
 				RigaExcelPlant riga = new RigaExcelPlant(valB,valC,valE);
 				

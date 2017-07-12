@@ -4,23 +4,23 @@ public class RigaExcelPlant {
 
 	private String nome;
 	
-	private int coordinataX;
+	private double coordinataX;
 	
-	private int coordinataY;
+	private double coordinataY;
 
 	public String getNome() {
 		return nome;
 	}
 
-	public int getCoordinataX() {
+	public double getCoordinataX() {
 		return coordinataX;
 	}
 
-	public int getCoordinataY() {
+	public double getCoordinataY() {
 		return coordinataY;
 	}
 
-	public RigaExcelPlant(String nome, int coordinataX, int coordinataY) {
+	public RigaExcelPlant(String nome, double coordinataX, double coordinataY) {
 		super();
 		this.nome = nome;
 		this.coordinataX = coordinataX;

@@ -4,9 +4,9 @@ public class RigaExcelDFT {
 
 	private String nome;
 	
-	private int coordinataX;
+	private double coordinataX;
 	
-	private int coordinataY;
+	private double coordinataY;
 	
 	private double S;
 	
@@ -20,11 +20,11 @@ public class RigaExcelDFT {
 		return nome;
 	}
 
-	public int getCoordinataX() {
+	public double getCoordinataX() {
 		return coordinataX;
 	}
 
-	public int getCoordinataY() {
+	public double getCoordinataY() {
 		return coordinataY;
 	}
 
@@ -44,7 +44,7 @@ public class RigaExcelDFT {
 		return initialStock;
 	}
 
-	public RigaExcelDFT(String nome, int coordinataX, int coordinataY, double s, double s_, double eOQ,	double initialStock) {
+	public RigaExcelDFT(String nome, double coordinataX, double coordinataY, double s, double s_, double eOQ,	double initialStock) {
 		super();
 		this.nome = nome;
 		this.coordinataX = coordinataX;

@@ -1,4 +1,4 @@
-package optNet.prova;
+package optNet.model2;
 
 import sim.portrayal.continuous.*;
 import sim.engine.*;
