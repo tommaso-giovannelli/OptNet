@@ -1,4 +1,4 @@
-package optNet.connection;
+package optNet.prova;
 
 public class RigaExcelCAP {
 

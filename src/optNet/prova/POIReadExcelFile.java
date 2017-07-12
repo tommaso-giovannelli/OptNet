@@ -1,4 +1,4 @@
-package optNet.connection;
+package optNet.prova;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
