@@ -21,14 +21,23 @@ public class Plant implements Steppable {
 	
 	public double[] qtaProdotta; //array di dimensione pari al numero di DFT; ogni elemento rappresenta la quantità prodotta per il corrispondente DFT
 	
+	public int numeroIDPlant; //serve per gestire il campo volPlantDFT del DFT in Plant_OrderFromDFT
+	
+	public final double PERCENT_DFT; //percentuale degli ordini del DFT che vengono soddisfatti da questo Plant
+	
+	public final double KM_COST; //costo al km per soddisfare gli ordini del DFT da questo Plant
+	
 	//costruttore
-	public Plant(String name, Double2D posizione) {
+	public Plant(String name, Double2D posizione, double percentDFT, double kmCost) {
 		super();
 		this.name = name;
 		this.posizione = posizione;
+		this.numeroIDPlant = Integer.parseInt(this.name.substring(5,6));
 		//this.orderVector = new double[0];
 		//this.qtaProdotta = new double[0];
 		this.listaDFT = new ArrayList<DFT>();
+		this.PERCENT_DFT = percentDFT;
+		this.KM_COST = kmCost;
 	}
 	
 	public void impostaListaDFT(Model model) {

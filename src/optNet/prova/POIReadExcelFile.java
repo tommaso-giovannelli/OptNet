@@ -65,10 +65,10 @@ public class POIReadExcelFile {
 				double valI = cellI.getNumericCellValue();
 				
 				HSSFCell cellJ = row.getCell((short) 9);				
-				double valJ = cellI.getNumericCellValue();
+				double valJ = cellJ.getNumericCellValue();
 				
 				HSSFCell cellK = row.getCell((short) 10);				
-				double valK = cellI.getNumericCellValue();
+				double valK = cellK.getNumericCellValue();
 				
 				RigaExcelCAP riga = new RigaExcelCAP(valB,valC,valE,valI,valJ,valK);
 				
@@ -272,7 +272,13 @@ public class POIReadExcelFile {
 				HSSFCell cellE = row.getCell((short) 4);				
 				double valE = cellE.getNumericCellValue();
 				
-				RigaExcelPlant riga = new RigaExcelPlant(valB,valC,valE);
+				HSSFCell cellF = row.getCell((short) 5);				
+				double valF = cellE.getNumericCellValue();
+				
+				HSSFCell cellG = row.getCell((short) 6);				
+				double valG = cellE.getNumericCellValue();
+				
+				RigaExcelPlant riga = new RigaExcelPlant(valB,valC,valE,valF,valG);
 				
 				listPlant.add(riga);
 				

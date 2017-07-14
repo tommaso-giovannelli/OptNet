@@ -7,6 +7,10 @@ public class RigaExcelPlant {
 	private double coordinataX;
 	
 	private double coordinataY;
+	
+	private double percentDFT;
+	
+	private double kmCost;
 
 	public String getNome() {
 		return nome;
@@ -20,11 +24,21 @@ public class RigaExcelPlant {
 		return coordinataY;
 	}
 
-	public RigaExcelPlant(String nome, double coordinataX, double coordinataY) {
+	public double getPercentDFT() {
+		return percentDFT;
+	}
+
+	public double getKmCost() {
+		return kmCost;
+	}
+
+	public RigaExcelPlant(String nome, double coordinataX, double coordinataY, double percentDFT, double kmCost) {
 		super();
 		this.nome = nome;
 		this.coordinataX = coordinataX;
 		this.coordinataY = coordinataY;
+		this.percentDFT = percentDFT;
+		this.kmCost = kmCost;
 	}
 
 	@Override

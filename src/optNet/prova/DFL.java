@@ -19,6 +19,12 @@ public class DFL implements Steppable {
 	
 	public List<CAP> CAPassociati; //lista dei CAP che vengono serviti da questo DFL
 	
+	public double s_; //livello di riordino
+	
+	public double S; //quantità variabile riordinata
+	
+	public double EOQ; //lotto economico
+	
 	public double dFLWeeklyDemand; //domanda generata dai CAP di competenza che il DFL deve soddisfare
 
 	public double dFTOrder; //ordine di prodotto inviato al DFT
@@ -27,27 +33,34 @@ public class DFL implements Steppable {
 	
 	public double inventoryWeight; //scorte
 	
-	//private double[] kmVolDFTDFL; //vettore a 2 componenti che tiene conto della distanza dal DFT da cui viene servito e della quantità di prodotto che è stata consegnata al DFL
+	public double[] kmVolDFTDFL; //vettore a 2 componenti che tiene conto della distanza dal DFT da cui viene servito e della quantità di prodotto che è stata consegnata dal DFT al DFL
 	
-	//private double numberOfTrip; //numero di viaggi compiuti tra il DFT e il DFL per soddisfare gli ordini del DFL
+	public double numberOfTrip; //numero di viaggi compiuti tra il DFT e il DFL per soddisfare gli ordini del DFL
 	
-	//private double kmTravelled; //numero di km percorsi per raggiungere il DFL dal DFT
+	public double kmTravelled; //numero di km percorsi per raggiungere il DFL dal DFT
 	
-	//private double transpCost; //costo totale di trasporto per raggiungere il DFL dal DFT
+	public double transpCost; //costo totale di trasporto per raggiungere il DFL dal DFT
 	
 	//private final double TRANSP_CAPACITY; //capacità del mezzo di trasporto per servire il DFL
 	
 	//private final double KM_COST; //costo al km
 	
 	//costruttore
-	public DFL(String name, Double2D posizione, double initialStock) {
+	public DFL(String name, Double2D posizione, double s_, double S, double EOQ, double initialStock) {
 		super();
 		this.name = name;
 		this.posizione = posizione;
 		this.dFLWeeklyDemand = 0;
 		this.dFTOrder = 0;
 		this.weekVolSatisfied = 0;
+		this.numberOfTrip = 0;
+		this.kmTravelled = 0;
+		this.transpCost = 0;
+		this.s_ = s_;
+		this.S = S;
+		this.EOQ = EOQ;
 		this.inventoryWeight = initialStock;
+		this.kmVolDFTDFL = new double[1]; 
 		this.CAPassociati = new ArrayList<CAP>();
 	}
 	
@@ -66,6 +79,7 @@ public class DFL implements Steppable {
 		}
 		
 		this.DFTassociato.DFLassociati.add(this);
+		this.kmVolDFTDFL[0] = bestDistanza; //processo OnRunInitialized
 
 	}
 	

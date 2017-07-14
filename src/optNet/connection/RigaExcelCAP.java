@@ -55,5 +55,4 @@ public class RigaExcelCAP {
 				+ ", CAPWeeklyDemandMax=" + CAPWeeklyDemandMax + "]";
 	}
 
-
 }

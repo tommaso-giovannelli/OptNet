@@ -16,13 +16,9 @@ public class CAP_WeekForCAP implements Steppable {
 		
 		Model model = (Model) state;
 		
-		//double CAPWeeklyDemand = //lo devo leggere dal file Excel degli input; 
-		
-		//cap.weeklyDemandValue = CAPWeeklyDemandValue;
-		
 		cap.actualDemand = cap.actualDemand + cap.weeklyDemandValue;
 		
-		cap.totalDemand = cap.totalDemand + cap.weeklyDemandValue;
+		CAP.totalDemand = CAP.totalDemand + cap.weeklyDemandValue;
 				
 	    if (cap.DFTassociato != null) {
 	    	cap.DFTassociato.dFTWeeklyDemand = cap.DFTassociato.dFTWeeklyDemand + cap.weeklyDemandValue;
