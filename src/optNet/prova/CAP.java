@@ -50,6 +50,11 @@ public class CAP implements Steppable {
 		this.numberOfTrip = 0;
 	}
 	
+	
+	/**
+	 * metodo che trova il centro di distribuzione (DFL o DFT) a monte più vicino al CAP e lo imposta come centro di distribuzione associato al CAP
+	 * @param model
+	 */
 	public void trovaImpiantoAssociato(Model model) { 
 		
 		double distanza;
@@ -59,8 +64,9 @@ public class CAP implements Steppable {
 			DFT dft = entry.getValue();
 			distanza = this.posizione.distance(dft.posizione);
 			if (distanza < bestDistanza) {
-				bestDistanza = distanza;
+				bestDistanza = new Double(distanza);
 				this.DFTassociato = dft;
+				this.DFLassociato = null;
 			}
 		}
 		
@@ -68,7 +74,7 @@ public class CAP implements Steppable {
 			DFL dfl = entry.getValue();
 			distanza = this.posizione.distance(dfl.posizione);
 			if (distanza < bestDistanza) {
-				bestDistanza = distanza;
+				bestDistanza = new Double(distanza);
 				this.DFLassociato = dfl;
 				this.DFTassociato = null;
 			}	
@@ -84,7 +90,7 @@ public class CAP implements Steppable {
 			throw new IllegalStateException("ATTENZIONE: A monte del CAP non c'è un DFT o un DFL associato");
 		}
 		
-	}
+	}	
 	
 	public void step(SimState state) { ////////////MASON
 		
@@ -92,15 +98,6 @@ public class CAP implements Steppable {
 		
 		trovaImpiantoAssociato(model);
 		
-		/* inserisco il processo OnRunInitialized nel metodo trovaImpiantoAssociato
-		//processo OnRunInitialized
-		if (DFTassociato != null)
-			distanceFromDc = this.posizione.distance(DFTassociato.posizione); //distanza il CAP e il DFT associato;
-		else if (DFLassociato != null)
-			distanceFromDc = this.posizione.distance(DFLassociato.posizione); //distanza il CAP e il DFL associato;
-		else
-			throw new IllegalStateException("ATTENZIONE: A monte del CAP non c'è un DFT o un DFL associato");
-		*/
 	}
 
 	@Override
@@ -136,13 +133,14 @@ public class CAP implements Steppable {
 
 	@Override
 	public String toString() {
-		return "CAP [name=" + name + ", posizione=" + posizione +
-			//	", DFTassociato=" + DFTassociato.name + ", DFLassociato=" + DFLassociato.name +
-				", weeklyDemandValue=" + weeklyDemandValue + ", actualDemand=" + actualDemand
-				+ ", totalDemand=" + totalDemand + ", totalDemandSatisfied=" + totalDemandSatisfied
-				+ ", weekDemandSatisfied=" + weekDemandSatisfied + ", distanceFromDc=" + distanceFromDc
-				+ ", numberOfTrip=" + numberOfTrip + ", transpCost=" + transpCost + ", kmTravelled=" + kmTravelled
-				+ "]";
+		return "CAP [name=" + name + ", posizione=" + posizione 
+			//	+ ", DFTassociato=" + DFTassociato.name + ", DFLassociato=" + DFLassociato.name +
+			//	", weeklyDemandValue=" + weeklyDemandValue + ", actualDemand=" + actualDemand
+			//	+ ", totalDemand=" + totalDemand + ", totalDemandSatisfied=" + totalDemandSatisfied
+			//	+ ", weekDemandSatisfied=" + weekDemandSatisfied + ", distanceFromDc=" + distanceFromDc
+			//	+ ", numberOfTrip=" + numberOfTrip + ", transpCost=" + transpCost + ", kmTravelled=" + kmTravelled
+			//	+ "]"
+				;
 	}
 
 	

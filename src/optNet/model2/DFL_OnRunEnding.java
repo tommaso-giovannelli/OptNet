@@ -14,19 +14,13 @@ public class DFL_OnRunEnding implements Steppable {
 	
 	public void step(SimState state) { //processo OnRunEnding -->  viene lanciato alla fine della simulazione e somma il costo di trasporto per servire il DFL al costo totale della rete
 		
-		if (Calendario.giorno == 7) {
-			
-			Model model = (Model) state;
+		Model model = (Model) state;
 		
-			Model_Prestazioni.totalCost = Model_Prestazioni.totalCost + dfl.transpCost;
+		Model_Prestazioni.totalCost = Model_Prestazioni.totalCost + dfl.transpCost;
 		
-			Model_Prestazioni.toDFLCost = Model_Prestazioni.toDFLCost + dfl.transpCost;
+		Model_Prestazioni.toDFLCost = Model_Prestazioni.toDFLCost + dfl.transpCost;
 		
-			Model_Prestazioni.toDFLKm = Model_Prestazioni.toDFLKm + dfl.kmTravelled;
-		
-			//System.out.println("DFL_OnRunEnding" + dfl.name + " " + Calendario.giorno + " " + Calendario.steps);
-			
-		}
+		Model_Prestazioni.toDFLKm = Model_Prestazioni.toDFLKm + dfl.kmTravelled;
 		
 	}
 }

@@ -73,12 +73,13 @@ public class DFL implements Steppable {
 			DFT dft = entry.getValue();
 			distanza = this.posizione.distance(dft.posizione);
 			if (distanza < bestDistanza) {
-				bestDistanza = distanza;
+				bestDistanza = new Double(distanza);
 				this.DFTassociato = dft;
 			}				
 		}
 		
-		this.DFTassociato.DFLassociati.add(this);
+	    this.DFTassociato.DFLassociati.add(this);
+
 		this.kmVolDFTDFL[0] = bestDistanza; //processo OnRunInitialized
 
 	}
@@ -124,11 +125,12 @@ public class DFL implements Steppable {
 
 	@Override
 	public String toString() {
-		return "DFL [name=" + name + ", posizione=" + posizione +
-			//	", DFTassociato=" + DFTassociato.name +
-			//	", CAPassociati=" + CAPassociati + 
-				", dFLWeeklyDemand=" + dFLWeeklyDemand + ", dFTOrder=" + dFTOrder
-				+ ", weekVolSatisfied=" + weekVolSatisfied + ", inventoryWeight=" + inventoryWeight + "]";
+		return "DFL [name=" + name + ", posizione=" + posizione 
+			//	+ ", DFTassociato=" + DFTassociato.name 
+			//	+ ", CAPassociati=" + CAPassociati  
+			//	+ ", dFLWeeklyDemand=" + dFLWeeklyDemand + ", dFTOrder=" + dFTOrder
+			//	+ ", weekVolSatisfied=" + weekVolSatisfied + ", inventoryWeight=" + inventoryWeight + "]"
+				;
 	}
 	
 	

@@ -1,4 +1,4 @@
-package optNet.model2;
+package optNet.prova;
 
 import sim.portrayal.continuous.*;
 import sim.engine.*;
@@ -54,14 +54,19 @@ public class ModelWithUI extends GUIState {
 	        
 	        // tell the portrayals what to portray and how to portray them
 	        modelFieldPortrayal.setField( model.modelField );
-	        modelFieldPortrayal.setPortrayalForClass(CAP.class, new OvalPortrayal2D(Color.BLUE));
-	        modelFieldPortrayal.setPortrayalForClass(DFL.class, new HexagonalPortrayal2D(Color.GREEN));
-	        modelFieldPortrayal.setPortrayalForClass(DFT.class, new HexagonalPortrayal2D(Color.YELLOW));
-	        modelFieldPortrayal.setPortrayalForClass(Plant.class, new RectanglePortrayal2D(Color.ORANGE));
+/////////   modelFieldPortrayal.setPortrayalForClass(CAP.class, new OvalPortrayal2D(Color.BLUE,15000000));
+////////    modelFieldPortrayal.setPortrayalForClass(DFL.class, new HexagonalPortrayal2D(Color.GREEN,20000000));
+////////    modelFieldPortrayal.setPortrayalForClass(DFT.class, new HexagonalPortrayal2D(Color.YELLOW,25000000));
+////////    modelFieldPortrayal.setPortrayalForClass(Plant.class, new RectanglePortrayal2D(Color.ORANGE,30000000));
+	        
+	        modelFieldPortrayal.setPortrayalForClass(CAP.class, new OvalPortrayal2D(Color.BLUE,5));
+	        modelFieldPortrayal.setPortrayalForClass(DFL.class, new HexagonalPortrayal2D(Color.GREEN,5));
+	        modelFieldPortrayal.setPortrayalForClass(DFT.class, new HexagonalPortrayal2D(Color.YELLOW,5));
+	        modelFieldPortrayal.setPortrayalForClass(Plant.class, new RectanglePortrayal2D(Color.ORANGE,5));
 	                                                
 	        // reschedule the displayer
 	        display.reset();
-	        display.setBackdrop(Color.gray);
+	        display.setBackdrop(Color.white);
 
 	        // redraw the display
 	        display.repaint();	                
@@ -73,7 +78,8 @@ public class ModelWithUI extends GUIState {
 	        super.init(c);
 
 	        // make the displayer
-	        display = new Display2D(600,600,this);
+/////////// display = new Display2D(20000,20000,this);
+	        display = new Display2D(450,450,this);
 	        // turn off clipping
 	        display.setClipping(false);
 

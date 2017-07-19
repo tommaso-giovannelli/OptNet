@@ -1,4 +1,4 @@
-package optNet.model2;
+package optNet.prova;
 
 import sim.engine.SimState;
 import sim.engine.Steppable;
@@ -18,7 +18,7 @@ public class CAP_WeekForCost implements Steppable {
 		
 		cap.numberOfTrip = cap.numberOfTrip + Math.ceil(cap.weekDemandSatisfied/model.TRANSP_CAPACITY);
 		
-		cap.transpCost = cap.numberOfTrip * cap.distanceFromDc * model.KM_COST;
+		CAP.transpCost = CAP.transpCost + Math.ceil(cap.weekDemandSatisfied/model.TRANSP_CAPACITY) * cap.distanceFromDc * model.KM_COST;
 		
 		cap.kmTravelled = cap.kmTravelled +  Math.ceil(cap.weekDemandSatisfied/model.TRANSP_CAPACITY)*cap.distanceFromDc;
 		

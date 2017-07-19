@@ -14,15 +14,20 @@ public class DFL_WeekForCost implements Steppable {
 	
 	public void step(SimState state) { //processo CostProcess -->  viene lanciato alla fine della settimana
 		
-		Model model = (Model) state;
+		if (Calendario.giorno == 7) {
+			
+			Model model = (Model) state;
 		
-		dfl.numberOfTrip = dfl.numberOfTrip + Math.ceil(dfl.weekVolSatisfied/model.TRANSP_CAPACITY);
+			dfl.numberOfTrip = dfl.numberOfTrip + Math.ceil(dfl.weekVolSatisfied/model.TRANSP_CAPACITY);
 		
-		dfl.transpCost = dfl.transpCost + Math.ceil(dfl.weekVolSatisfied/model.TRANSP_CAPACITY)*dfl.kmVolDFTDFL[0]*model.KM_COST;
+			dfl.transpCost = dfl.transpCost + Math.ceil(dfl.weekVolSatisfied/model.TRANSP_CAPACITY)*dfl.kmVolDFTDFL[0]*model.KM_COST;
 		
-		dfl.kmTravelled = dfl.kmTravelled +  Math.ceil(dfl.weekVolSatisfied/model.TRANSP_CAPACITY)*dfl.kmVolDFTDFL[0];
+			dfl.kmTravelled = dfl.kmTravelled +  Math.ceil(dfl.weekVolSatisfied/model.TRANSP_CAPACITY)*dfl.kmVolDFTDFL[0];
 		
-		dfl.weekVolSatisfied = 0;
+			dfl.weekVolSatisfied = 0;
+		
+			//System.out.println("DFL_WeekForCost" + dfl.name + " " + Calendario.giorno + " " + Calendario.steps);
+		}
 		
 	}
 

@@ -18,26 +18,30 @@ public class DFT_R implements Steppable {
 
 	public void step(SimState state) { //process ROC
 		
-		Model model = (Model) state;
+		if (Calendario.giorno == 1) {
 		
-		if (dft.inventoryWeight < dft.s_) {
+			Model model = (Model) state;
+		
+			if (dft.inventoryWeight < dft.s_) {
 			
-			dft.plantOrder = dft.plantOrder + dft.EOQ; //(R,s,Q)
+				dft.plantOrder = dft.plantOrder + dft.EOQ; //(R,s,Q)
 			
-			//dft.plantOrder = dft.plantOrder + dft.S - dft.inventoryWeight; //(R,s,S)
+				//dft.plantOrder = dft.plantOrder + dft.S - dft.inventoryWeight; //(R,s,S)
 			
-			for (Map.Entry<String, Plant> entry : model.manager.mapPlant.entrySet()) {
+				for (Map.Entry<String, Plant> entry : model.manager.mapPlant.entrySet()) {
 				
-				Plant plant = entry.getValue();
+					Plant plant = entry.getValue();
 				
-				int indexForDFT = plant.listaDFT.indexOf(dft);
+					int indexForDFT = plant.listaDFT.indexOf(dft);
 				
-				plant.orderVector[indexForDFT] = plant.orderVector[indexForDFT] + plant.PERCENT_DFT*(dft.plantOrder);
+					plant.orderVector[indexForDFT] = plant.orderVector[indexForDFT] + plant.PERCENT_DFT*(dft.plantOrder);
 				
+				}
+			
 			}
-			
+		
+			//System.out.println("DFT_R" + dft.name + " " + Calendario.giorno + " " + Calendario.steps);
 		}
-			
 		
 	}
 

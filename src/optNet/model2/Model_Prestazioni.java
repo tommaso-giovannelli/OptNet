@@ -33,22 +33,17 @@ public class Model_Prestazioni implements Steppable {
 	
 	public void step(SimState state) { //il seguente codice faceva parte del processo OnRunEnding del Model di Simio
 		
-		if (Calendario.giorno == 7) {
+		Model_Prestazioni.allCapDemand = Model_Prestazioni.allCapDemand + CAP.totalDemand; 
+				
+		Model_Prestazioni.allDemandSatisfied = Model_Prestazioni.allDemandSatisfied + CAP.totalDemandSatisfied;
+				
+		Model_Prestazioni.totalCost = Model_Prestazioni.totalCost + CAP.transpCost;
+				
+		Model_Prestazioni.toCapCost = Model_Prestazioni.toCapCost + CAP.transpCost;
+				
+		Model_Prestazioni.serviceLevel = Model_Prestazioni.allDemandSatisfied / this.allCapDemand;
 		
-			Model_Prestazioni.allCapDemand = Model_Prestazioni.allCapDemand + CAP.totalDemand; 
-				
-			Model_Prestazioni.allDemandSatisfied = Model_Prestazioni.allDemandSatisfied + CAP.totalDemandSatisfied;
-				
-			Model_Prestazioni.totalCost = Model_Prestazioni.totalCost + CAP.transpCost;
-				
-			Model_Prestazioni.toCapCost = Model_Prestazioni.toCapCost + CAP.transpCost;
-				
-			Model_Prestazioni.serviceLevel = Model_Prestazioni.allDemandSatisfied / Model_Prestazioni.allCapDemand;
-		
-			//System.out.println(this);
-			
-			//System.out.println("Model_Prestazioni" + " " + Calendario.giorno + " " + Calendario.steps);
-		}
+		//System.out.println(this);
 		
 	}
 

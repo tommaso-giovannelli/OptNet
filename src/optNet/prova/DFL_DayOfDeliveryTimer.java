@@ -15,38 +15,43 @@ public class DFL_DayOfDeliveryTimer implements Steppable  {
 		this.dfl = dfl;
 	}
 	
-public void step(SimState state) { //processo StartDelivery -->  viene lanciato il secondo giorno della settimana
+	public void step(SimState state) { //processo StartDelivery -->  viene lanciato il secondo giorno della settimana
 		
-		Model model = (Model) state;
+		if (Calendario.giorno == 2) {
+			
+			Model model = (Model) state;
 		
-		List<CAP> listaCAPordinata = new ArrayList<CAP>(); //lista dei CAP serviti dal dfl ordinati per domanda decrescente
+			List<CAP> listaCAPordinata = new ArrayList<CAP>(); //lista dei CAP serviti dal dfl ordinati per domanda decrescente
 		
-		listaCAPordinata.addAll(dfl.CAPassociati);
+			listaCAPordinata.addAll(dfl.CAPassociati);
 		
-		listaCAPordinata.sort(new CAPDemandComparator());
+			listaCAPordinata.sort(new CAPDemandComparator());
 		
-		if (dfl.inventoryWeight > 0) {
-			if (dfl.dFLWeeklyDemand > 0) {
-				for (CAP cap : listaCAPordinata) {
-					double qtaSpedita = 0;
-					if (dfl.inventoryWeight > 0) {
-						if (cap.actualDemand < dfl.inventoryWeight) {
-							qtaSpedita = cap.actualDemand;
+			if (dfl.inventoryWeight > 0) {
+				if (dfl.dFLWeeklyDemand > 0) {
+					for (CAP cap : listaCAPordinata) {
+						double qtaSpedita = 0;
+						if (dfl.inventoryWeight > 0) {
+							if (cap.actualDemand < dfl.inventoryWeight) {
+								qtaSpedita = cap.actualDemand;
+							} else {
+								qtaSpedita = dfl.inventoryWeight;
+							}
+							dfl.inventoryWeight = dfl.inventoryWeight - qtaSpedita;
+							dfl.dFLWeeklyDemand = dfl.dFLWeeklyDemand - qtaSpedita;
+							cap.actualDemand = cap.actualDemand - qtaSpedita;
+							CAP.totalDemandSatisfied = CAP.totalDemandSatisfied + qtaSpedita;
+							cap.weekDemandSatisfied = cap.weekDemandSatisfied + qtaSpedita;					
 						} else {
-							qtaSpedita = dfl.inventoryWeight;
+							break;
 						}
-						dfl.inventoryWeight = dfl.inventoryWeight - qtaSpedita;
-						dfl.dFLWeeklyDemand = dfl.dFLWeeklyDemand - qtaSpedita;
-						cap.actualDemand = cap.actualDemand - qtaSpedita;
-						cap.totalDemandSatisfied = cap.totalDemandSatisfied + qtaSpedita;
-						cap.weekDemandSatisfied = cap.weekDemandSatisfied + qtaSpedita;					
-					} else {
-						break;
 					}
 				}
 			}
+		
+			//System.out.println("DFL_DayOfDeliveryTimer" + dfl.name + " " + Calendario.giorno + " " + Calendario.steps);
 		}
 
-}
+	}
 
 }

@@ -22,10 +22,14 @@ public class Model extends SimState {
 	
     public final double KM_COST = 1; //costo al km
 	
-	public int width = Integer.MAX_VALUE; //ampiezza del field model ////////////MASON
+////public int width = Integer.MAX_VALUE; //ampiezza del field model ////////////MASON
 	
-	public int height = Integer.MAX_VALUE; //altezza del field model ////////////MASON
+////public int height = Integer.MAX_VALUE; //altezza del field model ////////////MASON
 	
+	public int width = 100; //ampiezza del field model ////////////MASON
+	
+	public int height = 100; //altezza del field model ////////////MASON
+
 	public final int NUM_PLANT = 6; //numero dei Plant
 	
 	public final int NUM_CAP = 4413; //numero dei CAP
@@ -36,13 +40,17 @@ public class Model extends SimState {
 	
 	public Manager manager; //contiene le informazioni di tutti gli oggetti, anche gli impianti associati a monte e a valle
 	
+	public final int NUMERO_SIMULAZIONI = 2;
+	
+	public final int NUMERO_REPLICHE = 2;	
 	
 	
-	public Continuous2D modelField = new Continuous2D(1.0,width,height); ////////////MASON
+	
+	public Continuous2D modelField = new Continuous2D(1.0,width,height); 
 	
 	
 	
-	public Model(long seed) ////////////MASON
+	public Model(long seed) 
     {
     super(seed);
     }
@@ -69,7 +77,9 @@ public class Model extends SimState {
 		//crea Plant e CAP leggendoli dai file di input (CAP.csv e Plant.csv) e usando i relativi costruttori (tutti i fields saranno inizializzati a 0 eccetto nome e posizione); aggiungi questi oggetti nel manager
 		for (RigaExcelCAP r : listCAP) {
 			
-			Double2D posizione = new Double2D(r.getCoordinataX()+2000000000, r.getCoordinataY()); //costruisco la posizione ricavando le coordinate da r
+////////////Double2D posizione = new Double2D(r.getCoordinataX()+2000000000, r.getCoordinataY()-2000000000); //costruisco la posizione ricavando le coordinate da r
+			
+			Double2D posizione = new Double2D(r.getCoordinataX(), r.getCoordinataY()); //costruisco la posizione ricavando le coordinate da r
 			
 			TriangularDistribution CAPWeeklyDemand = new TriangularDistribution(new MTFApache(random), r.getCAPWeeklyDemandMin(), r.getCAPWeeklyDemandMedio(), r.getCAPWeeklyDemandMax());
 			
@@ -80,7 +90,9 @@ public class Model extends SimState {
 		
 		for (RigaExcelPlant r : listPlant) {
 			
-			Double2D posizione = new Double2D(r.getCoordinataX()+2000000000, r.getCoordinataY());
+////////////Double2D posizione = new Double2D(r.getCoordinataX()+2000000000, r.getCoordinataY()-2000000000);
+			
+			Double2D posizione = new Double2D(r.getCoordinataX(), r.getCoordinataY());
 			
 			Plant plant = new Plant(r.getNome(), posizione, r.getPercentDFT(), r.getKmCost());
 			
@@ -92,7 +104,9 @@ public class Model extends SimState {
 		//crea DFT e DFL leggendoli dai file di input (DFT.csv e DFL.csv) e usando i relativi costruttori (tutti i fields saranno inizializzati a 0 eccetto nome e posizione); aggiungi questi oggetti nel manager
 		for (RigaExcelDFT r : listDFT) {
 			
-			Double2D posizione = new Double2D(r.getCoordinataX()+2000000000, r.getCoordinataY()); //costruisco la posizione ricavando le coordinate da r
+///////// //Double2D posizione = new Double2D(r.getCoordinataX()+2000000000, r.getCoordinataY()-2000000000); //costruisco la posizione ricavando le coordinate da r
+			
+			Double2D posizione = new Double2D(r.getCoordinataX(), r.getCoordinataY()); //costruisco la posizione ricavando le coordinate da r
 			
 			DFT dft = new DFT(r.getNome(), posizione, r.getS_(), r.getS(), r.getEOQ(), r.getInitialStock()); //costruisco l'oggetto CAP
 			
@@ -101,7 +115,9 @@ public class Model extends SimState {
 		
 		for (RigaExcelDFL r : listDFL) {
 			
-			Double2D posizione = new Double2D(r.getCoordinataX()+2000000000, r.getCoordinataY()); //costruisco la posizione ricavando le coordinate da r
+////////////Double2D posizione = new Double2D(r.getCoordinataX()+2000000000, r.getCoordinataY()-2000000000); //costruisco la posizione ricavando le coordinate da r
+			
+			Double2D posizione = new Double2D(r.getCoordinataX(), r.getCoordinataY()); //costruisco la posizione ricavando le coordinate da r
 			
 			DFL dfl = new DFL(r.getNome(),posizione, r.getS_(), r.getS(), r.getEOQ(), r.getInitialStock()); //costruisco l'oggetto CAP
 			
@@ -135,6 +151,46 @@ public class Model extends SimState {
 	
 	}
 	
+	//metodi getter per il Model Inspector
+	public double getAllCapDemand() {
+		return Model_Prestazioni.allCapDemand;
+	}	
+	
+	public double getAllDemandSatisfied() {
+		return Model_Prestazioni.allDemandSatisfied;
+	}
+	
+	public double getServiceLevel() {
+		return Model_Prestazioni.serviceLevel;
+	}
+	
+	public double getTotalCost() {
+		return Model_Prestazioni.totalCost;
+	}
+	
+	public double getToCapCost() {
+		return Model_Prestazioni.toCapCost;
+	}
+	
+	public double getToDFTCost() {
+		return Model_Prestazioni.toDFTCost;
+	}
+	
+	public double getToDFLCost() {
+		return Model_Prestazioni.toDFLCost;
+	}
+	
+	public double getToCapKm() {
+		return Model_Prestazioni.toCapKm;
+	}
+	
+	public double getToDFTKm() {
+		return Model_Prestazioni.toDFTKm;
+	}
+	
+	public double getToDFLKm() {
+		return Model_Prestazioni.toDFLKm;
+	}
 		
 	/**
 	 * @return il numero di DFT 
@@ -163,29 +219,33 @@ public class Model extends SimState {
 		
 		numDFL = contaDFL();
 		
+		//imposto il calendario di esecuzione dei processi
+		Calendario calendario = new Calendario();
+		schedule.scheduleRepeating(Schedule.EPOCH,0,calendario);
+		
+		/*
 		//inserisco nello Schedule gli impianti memorizzati nel manager 
 		for (Map.Entry<String, CAP> entry : manager.mapCAP.entrySet()) { /////CAP
 			CAP cap = entry.getValue();
 			modelField.setObjectLocation(cap, cap.posizione );
 			schedule.scheduleOnce(Schedule.EPOCH, 0, cap);
 			CAP_WeekForCAP CapDemand = new CAP_WeekForCAP(cap);
-			schedule.scheduleRepeating(Schedule.EPOCH, 1, CapDemand, 7);
+			schedule.scheduleRepeating(Schedule.EPOCH, Integer.MAX_VALUE, CapDemand, 7);
 			CAP_WeekForCost CostProcess = new CAP_WeekForCost(cap);
 			schedule.scheduleRepeating(Schedule.EPOCH + 6, 0, CostProcess, 7);
 		}
-		
 		for (Map.Entry<String, DFL> entry : manager.mapDFL.entrySet()) { /////DFL
 			DFL dfl = entry.getValue();
 			modelField.setObjectLocation(dfl, dfl.posizione );
 			schedule.scheduleOnce(Schedule.EPOCH, 0, dfl);
 			DFL_R roc = new DFL_R(dfl);
-			schedule.scheduleRepeating(Schedule.EPOCH, 1, roc, 7);
+			schedule.scheduleRepeating(Schedule.EPOCH, Integer.MAX_VALUE, roc, 7);
 			DFL_DayOfDeliveryTimer startDelivery = new DFL_DayOfDeliveryTimer(dfl);
 			schedule.scheduleRepeating(Schedule.EPOCH + 1, 0, startDelivery, 7);
 			DFL_WeekForCost costProcess = new DFL_WeekForCost(dfl);
 			schedule.scheduleRepeating(Schedule.EPOCH + 6, 0, costProcess, 7);
 			DFL_OnRunEnding onRunEnding = new DFL_OnRunEnding(dfl);
-			schedule.scheduleRepeating(Schedule.EPOCH + 6, 1, onRunEnding, 7);
+			schedule.scheduleRepeating(Schedule.EPOCH + 6, 1, onRunEnding, 7); 
 		}
 		
 		for (Map.Entry<String, DFT> entry : manager.mapDFT.entrySet()) { /////DFT
@@ -195,7 +255,7 @@ public class Model extends SimState {
 			DFT_DayOfDeliveryTimer startDelivery = new DFT_DayOfDeliveryTimer(dft);
 			schedule.scheduleRepeating(Schedule.EPOCH + 2, 0, startDelivery, 7);
 			DFT_R roc = new DFT_R(dft);
-			schedule.scheduleRepeating(Schedule.EPOCH, 1, roc, 7);
+			schedule.scheduleRepeating(Schedule.EPOCH, Integer.MAX_VALUE, roc, 7);
 			DFT_OnRunEnding onRunEnding = new DFT_OnRunEnding(dft);
 			schedule.scheduleRepeating(Schedule.EPOCH + 6, 1, onRunEnding, 7);
 		}
@@ -205,39 +265,95 @@ public class Model extends SimState {
 			modelField.setObjectLocation(plant, plant.posizione );
 			schedule.scheduleOnce(Schedule.EPOCH, 0, plant);
 			Plant_OrderFromDFT startDelivery = new Plant_OrderFromDFT(plant);
-			schedule.scheduleRepeating(Schedule.EPOCH, 2, startDelivery, 7);
+			TriangularDistribution leadTime = new TriangularDistribution(new MTFApache(random), 3, 4, 7); //il LT può essere un qualunque numero intero compreso tra 3 e 6 (estremi inclusi)
+			int leadTimeInt = (int) leadTime.sample();
+			schedule.scheduleRepeating(Schedule.EPOCH + leadTimeInt, 2, startDelivery, 7);
 		}
 		
 		Model_Prestazioni misureDiPrestazione = new Model_Prestazioni();
 		schedule.scheduleRepeating(Schedule.EPOCH + 6,2,misureDiPrestazione,7);
+		
+		StampaImpianti stampa = new StampaImpianti();
+		schedule.scheduleOnce(schedule.EPOCH+7,Integer.MAX_VALUE,stampa);
+		*/
+		
+		//inserisco nello Schedule gli impianti memorizzati nel manager 
+			for (Map.Entry<String, CAP> entry : manager.mapCAP.entrySet()) { /////CAP
+				CAP cap = entry.getValue();
+				modelField.setObjectLocation(cap, cap.posizione );
+				schedule.scheduleOnce(Schedule.EPOCH, 0, cap);
+				CAP_WeekForCAP CapDemand = new CAP_WeekForCAP(cap);
+				schedule.scheduleRepeating(Schedule.EPOCH_PLUS_EPSILON, 10, CapDemand);
+				CAP_WeekForCost CostProcess = new CAP_WeekForCost(cap);
+				schedule.scheduleRepeating(Schedule.EPOCH_PLUS_EPSILON, 0, CostProcess);
+			}
+			for (Map.Entry<String, DFL> entry : manager.mapDFL.entrySet()) { /////DFL
+				DFL dfl = entry.getValue();
+				modelField.setObjectLocation(dfl, dfl.posizione );
+				schedule.scheduleOnce(Schedule.EPOCH, 0, dfl);
+				DFL_R roc = new DFL_R(dfl);
+				schedule.scheduleRepeating(Schedule.EPOCH_PLUS_EPSILON, 20, roc);
+				DFL_DayOfDeliveryTimer startDelivery = new DFL_DayOfDeliveryTimer(dfl);
+				schedule.scheduleRepeating(Schedule.EPOCH_PLUS_EPSILON, 0, startDelivery);
+				DFL_WeekForCost costProcess = new DFL_WeekForCost(dfl);
+				schedule.scheduleRepeating(Schedule.EPOCH_PLUS_EPSILON, 0, costProcess);
+				DFL_OnRunEnding onRunEnding = new DFL_OnRunEnding(dfl);
+				schedule.scheduleRepeating(Schedule.EPOCH_PLUS_EPSILON, 10, onRunEnding); 
+			}
+			
+			for (Map.Entry<String, DFT> entry : manager.mapDFT.entrySet()) { /////DFT
+				DFT dft = entry.getValue();
+				modelField.setObjectLocation(dft, dft.posizione );
+				schedule.scheduleOnce(Schedule.EPOCH, 0, dft);
+				DFT_DayOfDeliveryTimer startDelivery = new DFT_DayOfDeliveryTimer(dft);
+				schedule.scheduleRepeating(Schedule.EPOCH_PLUS_EPSILON, 0, startDelivery);
+				DFT_R roc = new DFT_R(dft);
+				schedule.scheduleRepeating(Schedule.EPOCH_PLUS_EPSILON, 20, roc);
+				DFT_OnRunEnding onRunEnding = new DFT_OnRunEnding(dft);
+				schedule.scheduleRepeating(Schedule.EPOCH_PLUS_EPSILON, 10, onRunEnding);
+			}
+			
+			for (Map.Entry<String, Plant> entry : manager.mapPlant.entrySet()) { /////Plant
+				Plant plant = entry.getValue();
+				modelField.setObjectLocation(plant, plant.posizione );
+				schedule.scheduleOnce(Schedule.EPOCH, 0, plant);
+				Plant_OrderFromDFT startDelivery = new Plant_OrderFromDFT(plant);
+				TriangularDistribution leadTime = new TriangularDistribution(new MTFApache(random), 3, 4, 7); //il LT può essere un qualunque numero intero compreso tra 3 e 6 (estremi inclusi)
+				int leadTimeInt = (int) leadTime.sample();
+				schedule.scheduleRepeating(Schedule.EPOCH_PLUS_EPSILON, 30, startDelivery);
+			}
+			
+			Model_Prestazioni misureDiPrestazione = new Model_Prestazioni();
+			schedule.scheduleRepeating(Schedule.EPOCH_PLUS_EPSILON,Integer.MAX_VALUE,misureDiPrestazione);
+			
+		//	StampaImpianti stampa = new StampaImpianti();
+		//	schedule.scheduleRepeating(Schedule.EPOCH,0,stampa);
 
 	}	
 
 	
 	public static void main(String[] args) { ////////////MASON
 		
-		/*
+	
 		Model model = new Model(System.currentTimeMillis());
 		
 		model.nameThread();
 		
-		final int NUMERO_SIMULAZIONI = 50;
+		int contatoreSimulazioni = 1;
 		
-		final int NUMERO_REPLICHE = 4;
-		
-		int contatoreSimulazioni = 0;
-		
-	//	model.creaGrafo();
-		
-		while (contatoreSimulazioni < NUMERO_SIMULAZIONI) {
+		while (contatoreSimulazioni <= model.NUMERO_SIMULAZIONI) {
 			
 			//inserire codice per leggere info da sim_legge.txt
 			
-			int contatoreRepliche = 0;
+			int contatoreRepliche = 1;
 			
 		//	model.modificaGrafo();
 			
-			while(contatoreRepliche < NUMERO_REPLICHE) {
+			while(contatoreRepliche <= model.NUMERO_REPLICHE) {
+				
+				System.out.println("\nSimulazione numero " + contatoreSimulazioni + " - Replica numero " + contatoreRepliche);
+				
+	    		model.schedule.reset();
 				
 				model.setJob(contatoreRepliche);
 				
@@ -245,17 +361,13 @@ public class Model extends SimState {
 	    		
 	    		long steps;
 	    		
-	    		do
-	    			{
+	    		do {
+	    				
 	    			if (!model.schedule.step(model))
 	    				break;
 	    			steps = model.schedule.getSteps();
-	    			if (steps % 500 == 0)
-	    				System.out.println("Steps: " + steps + " Time: " + model.schedule.time());
-	    			}
-	    		while(steps < 5000);
-	    		
-	    		model.finish();
+	    			
+	    		} while(steps < 365);
 	    		
 	    		contatoreRepliche++ ;
 	    		
@@ -263,21 +375,23 @@ public class Model extends SimState {
 	    		
 			}
 			
-			//inserire codice per calcolare il valor medio del costo totale e del livello di servizio ottenuti nei vari run
+			//inserire codice per calcolare il valor medio del costo totale e del livello di servizio ottenuti nelle varie repliche
 			
 			//inserire codice per riempire il file opt_legge.txt da dare in input all'ottimizzatore;
 			
 			//vedi pag 66 della tesi di marco per i diagrammi di flusso dell'ottimizzatore e del simulatore
 			
-			System.exit(0);  // make sure any threads finish up
+			model.finish();
 			
 			contatoreSimulazioni++;
 		}
-		*/
 		
+		System.exit(0);  // make sure any threads finish up
 		
+		/*
 		doLoop(Model.class, args);
 		System.exit(0);
+		*/
 		
 	}
 

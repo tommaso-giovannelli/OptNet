@@ -1,4 +1,4 @@
-package optNet.model2;
+package optNet.prova;
 
 import java.util.Map;
 
@@ -25,9 +25,9 @@ public class CAP implements Steppable {
 
 	public double actualDemand; //domanda attuale (comprende anche la domanda non soddisfatta nelle settimane precedenti)
 	
-	public double totalDemand; //domanda totale che il CAP ha generato dall'inizio della simulazione 
+	public static double totalDemand = 0; //domanda totale che il CAP ha generato dall'inizio della simulazione 
 	
-	public double totalDemandSatisfied; //domanda totale del CAP che è stata soddisfatta dall'inizio della simulazione
+	public static double totalDemandSatisfied = 0; //domanda totale del CAP che è stata soddisfatta dall'inizio della simulazione
 	
 	public double weekDemandSatisfied; //domanda soddisfatta nella settimana considerata
 	
@@ -35,7 +35,7 @@ public class CAP implements Steppable {
 	
 	public double numberOfTrip; //numero di viaggi compiuti dal mezzo di trasporto tra il CAP e il DFT/DFL dall'inizio della simulazione
 	
-	public double transpCost; //costo totale di trasporto per raggiungere il CAP dal DFL
+	public static double transpCost = 0; //costo totale di trasporto per raggiungere il CAP dal DFL
 			
 	public double kmTravelled; //numero di km percorsi per raggiungere il CAP dal DFL
 	
@@ -46,13 +46,14 @@ public class CAP implements Steppable {
 		this.posizione = posizione;
 		this.weeklyDemandValue = CAPWeeklyDemand;
 		this.actualDemand = 0;
-		this.totalDemand = 0;
-		this.totalDemandSatisfied = 0;
 		this.weekDemandSatisfied = 0;
 		this.numberOfTrip = 0;
-		this.transpCost = 0;
 	}
 	
+	/**
+	 * metodo che trova il centro di distribuzione (DFL o DFT) a monte più vicino al CAP e lo imposta come centro di distribuzione associato al CAP
+	 * @param model
+	 */
 	public void trovaImpiantoAssociato(Model model) { 
 		
 		double distanza;
@@ -62,7 +63,7 @@ public class CAP implements Steppable {
 			DFT dft = entry.getValue();
 			distanza = this.posizione.distance(dft.posizione);
 			if (distanza < bestDistanza) {
-				bestDistanza = distanza;
+				bestDistanza = new Double(distanza);
 				this.DFTassociato = dft;
 			}
 		}
@@ -71,7 +72,7 @@ public class CAP implements Steppable {
 			DFL dfl = entry.getValue();
 			distanza = this.posizione.distance(dfl.posizione);
 			if (distanza < bestDistanza) {
-				bestDistanza = distanza;
+				bestDistanza = new Double(distanza);
 				this.DFLassociato = dfl;
 				this.DFTassociato = null;
 			}	
@@ -104,6 +105,9 @@ public class CAP implements Steppable {
 		else
 			throw new IllegalStateException("ATTENZIONE: A monte del CAP non c'è un DFT o un DFL associato");
 		*/
+		
+		System.out.println("CAP: " + this + "-----------DFTassociato: " + this.DFTassociato + "---------DFLassociato: " + this.DFLassociato);
+		
 	}
 
 	@Override
@@ -139,13 +143,14 @@ public class CAP implements Steppable {
 
 	@Override
 	public String toString() {
-		return "CAP [name=" + name + ", posizione=" + posizione +
-			//	", DFTassociato=" + DFTassociato.name + ", DFLassociato=" + DFLassociato.name +
-				", weeklyDemandValue=" + weeklyDemandValue + ", actualDemand=" + actualDemand
-				+ ", totalDemand=" + totalDemand + ", totalDemandSatisfied=" + totalDemandSatisfied
-				+ ", weekDemandSatisfied=" + weekDemandSatisfied + ", distanceFromDc=" + distanceFromDc
-				+ ", numberOfTrip=" + numberOfTrip + ", transpCost=" + transpCost + ", kmTravelled=" + kmTravelled
-				+ "]";
+		return "CAP [name=" + name + ", posizione=" + posizione 
+			//	+ ", DFTassociato=" + DFTassociato.name + ", DFLassociato=" + DFLassociato.name +
+			//	", weeklyDemandValue=" + weeklyDemandValue + ", actualDemand=" + actualDemand
+			//	+ ", totalDemand=" + totalDemand + ", totalDemandSatisfied=" + totalDemandSatisfied
+			//	+ ", weekDemandSatisfied=" + weekDemandSatisfied + ", distanceFromDc=" + distanceFromDc
+			//	+ ", numberOfTrip=" + numberOfTrip + ", transpCost=" + transpCost + ", kmTravelled=" + kmTravelled
+			//	+ "]"
+				;
 	}
 
 	

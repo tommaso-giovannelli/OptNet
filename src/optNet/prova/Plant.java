@@ -33,8 +33,6 @@ public class Plant implements Steppable {
 		this.name = name;
 		this.posizione = posizione;
 		this.numeroIDPlant = Integer.parseInt(this.name.substring(5,6));
-		//this.orderVector = new double[0];
-		//this.qtaProdotta = new double[0];
 		this.listaDFT = new ArrayList<DFT>();
 		this.PERCENT_DFT = percentDFT;
 		this.KM_COST = kmCost;
@@ -49,15 +47,15 @@ public class Plant implements Steppable {
 		
 	}
 
-	public void step(SimState state) { ////////////MASON
+	public void step(SimState state) { 
 		
 		Model model = (Model) state;
 		
 		impostaListaDFT(model);
 		
-		orderVector = new double[model.numDFT];
+		orderVector = new double[model.numDFT]; 
 		
-		qtaProdotta = new double[model.numDFT];
+		qtaProdotta = new double[model.numDFT]; 
 		
 	}
 	
@@ -94,10 +92,11 @@ public class Plant implements Steppable {
 
 	@Override
 	public String toString() {
-		return "Plant [name=" + name + ", posizione=" + posizione +
-			//	", listaDFT=" + listaDFT +
-				", orderVector="
-				+ Arrays.toString(orderVector) + ", qtaProdotta=" + Arrays.toString(qtaProdotta) + "]";
+		return "Plant [name=" + name + ", posizione=" + posizione 
+			//	+ ", listaDFT=" + listaDFT +
+			//	", orderVector="
+			//	+ Arrays.toString(orderVector) + ", qtaProdotta=" + Arrays.toString(qtaProdotta) 
+				+ "]";
 	}
 	
 	

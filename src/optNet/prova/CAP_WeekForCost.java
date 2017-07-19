@@ -14,15 +14,20 @@ public class CAP_WeekForCost implements Steppable {
 	
 	public void step(SimState state) { //processo CostProcess -->  viene lanciato alla fine della settimana
 		
-		Model model = (Model) state;
+		if (Calendario.giorno == 7) {
+			
+			Model model = (Model) state;
 		
-		cap.numberOfTrip = cap.numberOfTrip + Math.ceil(cap.weekDemandSatisfied/model.TRANSP_CAPACITY);
+			cap.numberOfTrip = cap.numberOfTrip + Math.ceil(cap.weekDemandSatisfied/model.TRANSP_CAPACITY);
 		
-		CAP.transpCost = CAP.transpCost + Math.ceil(cap.weekDemandSatisfied/model.TRANSP_CAPACITY) * cap.distanceFromDc * model.KM_COST;
+			CAP.transpCost = CAP.transpCost + Math.ceil(cap.weekDemandSatisfied/model.TRANSP_CAPACITY) * cap.distanceFromDc * model.KM_COST;
 		
-		cap.kmTravelled = cap.kmTravelled +  Math.ceil(cap.weekDemandSatisfied/model.TRANSP_CAPACITY)*cap.distanceFromDc;
+			cap.kmTravelled = cap.kmTravelled +  Math.ceil(cap.weekDemandSatisfied/model.TRANSP_CAPACITY)*cap.distanceFromDc;
 		
-		cap.weekDemandSatisfied = 0;
+			cap.weekDemandSatisfied = 0;
+		
+			//System.out.println("CAP_WeekForCost" + cap.name + " " + Calendario.giorno + " " + Calendario.steps);
+		}
 		
 	}
 	

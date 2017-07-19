@@ -60,7 +60,6 @@ public class DFT implements Steppable {
 		this.numberOfTrip = 0;
 		this.kmTravelled = 0;
 		this.inventoryWeight = initialStock;
-	//	this.volPlantDFT = new double[0];
 		this.CAPassociati = new ArrayList<CAP>();
 		this.DFLassociati = new ArrayList<DFL>();
 	}
@@ -69,9 +68,9 @@ public class DFT implements Steppable {
 		
 		Model model = (Model) state;
 		
-		this.volPlantDFT = new double[model.NUM_PLANT];
+		this.volPlantDFT = new double[model.NUM_PLANT]; 
 		
-		this.kmPlantDFT = new double[model.NUM_PLANT];
+		this.kmPlantDFT = new double[model.NUM_PLANT]; 
 		
 		for (Map.Entry<String, Plant> entry : model.manager.mapPlant.entrySet()) {
 			Plant plant = entry.getValue();
@@ -113,11 +112,12 @@ public class DFT implements Steppable {
 
 	@Override
 	public String toString() {
-		return "DFT [name=" + name + ", posizione=" + posizione + 
-			//	", CAPassociati=" + CAPassociati + ", DFLassociati=" + DFLassociati +
-				", dFTWeeklyDemand=" + dFTWeeklyDemand + ", plantOrder=" + plantOrder
-				+ ", orderFromDFL=" + orderFromDFL + ", inventoryWeight=" + inventoryWeight + ", volPlantDFT="
-				+ Arrays.toString(volPlantDFT) + "]";
+		return "DFT [name=" + name + ", posizione=" + posizione  
+			//	+ ", CAPassociati=" + CAPassociati + ", DFLassociati=" + DFLassociati 
+			//	+ ", dFTWeeklyDemand=" + dFTWeeklyDemand + ", plantOrder=" + plantOrder
+			//	+ ", orderFromDFL=" + orderFromDFL + ", inventoryWeight=" + inventoryWeight + ", volPlantDFT="
+			//	+ Arrays.toString(volPlantDFT) + "]"
+				;
 	}	
 	
 	
