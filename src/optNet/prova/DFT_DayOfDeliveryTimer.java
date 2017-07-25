@@ -46,38 +46,41 @@ public class DFT_DayOfDeliveryTimer implements Steppable  {
 							dft.inventoryWeight = dft.inventoryWeight - qtaSpedita;
 							dft.dFTWeeklyDemand = dft.dFTWeeklyDemand - qtaSpedita;
 							cap.actualDemand = cap.actualDemand - qtaSpedita;
-							CAP.totalDemandSatisfied = CAP.totalDemandSatisfied + qtaSpedita;
+						//	cap.totalDemandSatisfied = cap.totalDemandSatisfied + qtaSpedita;
 							cap.weekDemandSatisfied = cap.weekDemandSatisfied + qtaSpedita;
 						} else {
 							break;
 						}
 					}
-				} else {
-					if (dft.orderFromDFL > 0) {
-						for (DFL dfl : listaDFLordinata) {
-							double qtaSpedita = 0;
-							if (dft.inventoryWeight > 0) {
-								if (dfl.dFTOrder < dft.inventoryWeight) {
-									qtaSpedita = dfl.dFTOrder;
-								} else {
-									qtaSpedita = dft.inventoryWeight;
-								}
-								dft.inventoryWeight = dft.inventoryWeight - qtaSpedita;
-								dft.orderFromDFL= dft.orderFromDFL - qtaSpedita;
-								dfl.inventoryWeight = dfl.inventoryWeight + qtaSpedita;
-								dfl.dFTOrder = dfl.dFTOrder - qtaSpedita;
-								dfl.weekVolSatisfied = dfl.weekVolSatisfied + qtaSpedita;
+				} 
+			}
+			
+			if (dft.inventoryWeight > 0) {
+				if (dft.orderFromDFL > 0) {
+					for (DFL dfl : listaDFLordinata) {
+						double qtaSpedita = 0;
+						if (dft.inventoryWeight > 0) {
+							if (dfl.dFTOrder < dft.inventoryWeight) {
+								qtaSpedita = dfl.dFTOrder;
 							} else {
-								break;
+								qtaSpedita = dft.inventoryWeight;
 							}
+							dft.inventoryWeight = dft.inventoryWeight - qtaSpedita;
+							dft.orderFromDFL= dft.orderFromDFL - qtaSpedita;
+							dfl.inventoryWeight = dfl.inventoryWeight + qtaSpedita;
+							dfl.kmVolDFTDFL[1] = dfl.kmVolDFTDFL[1] + qtaSpedita;
+							dfl.dFTOrder = dfl.dFTOrder - qtaSpedita;
+							dfl.weekVolSatisfied = dfl.weekVolSatisfied + qtaSpedita;
+						} else {
+							break;
 						}
 					}
 				}
 			}
-		
-			//System.out.println("DFT_DayOfDeliveryTimer" + dft.name + " " + Calendario.giorno + " " + Calendario.steps);
 		}
 		
+		//System.out.println("DFT_DayOfDeliveryTimer" + dft.name + " " + Calendario.giorno + " " + Calendario.steps);
 	}
-
+		
 }
+

@@ -33,18 +33,22 @@ public class Plant_OrderFromDFT implements Steppable {
 		
 			//assegno a orderVector gli ordini dei DFT a cui il Plant è associato
 			for (DFT dft : plant.listaDFT) {
+				
+				if (plant.orderVector[indexForDFT] > 0) {
 						
-				plant.qtaProdotta[indexForDFT] = plant.orderVector[indexForDFT]; //quantità prodotta per questo DFT
-			
-				plant.orderVector[indexForDFT] = plant.orderVector[indexForDFT] - plant.qtaProdotta[indexForDFT];
+					plant.qtaProdotta[indexForDFT] = plant.orderVector[indexForDFT]; //quantità prodotta per questo DFT
+				
+					plant.orderVector[indexForDFT] = plant.orderVector[indexForDFT] - plant.qtaProdotta[indexForDFT];
+						
+					dft.inventoryWeight = dft.inventoryWeight + plant.qtaProdotta[indexForDFT];
 					
-				dft.inventoryWeight = dft.inventoryWeight + plant.qtaProdotta[indexForDFT];
+					dft.volPlantDFT[plant.numeroIDPlant-1] = dft.volPlantDFT[plant.numeroIDPlant-1] + plant.qtaProdotta[indexForDFT];
+					
+			///		dft.plantOrder = dft.plantOrder - plant.qtaProdotta[indexForDFT];
 				
-				dft.volPlantDFT[plant.numeroIDPlant-1] = dft.volPlantDFT[plant.numeroIDPlant-1] + plant.qtaProdotta[plant.numeroIDPlant-1];
+					indexForDFT = indexForDFT + 1;
 				
-				dft.plantOrder = dft.plantOrder - plant.qtaProdotta[indexForDFT];
-			
-				indexForDFT = indexForDFT + 1;
+				}
 				
 			}
 		

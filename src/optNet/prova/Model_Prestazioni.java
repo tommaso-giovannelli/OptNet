@@ -1,5 +1,7 @@
 package optNet.prova;
 
+import java.util.Map;
+
 import sim.engine.SimState;
 import sim.engine.Steppable;
 
@@ -33,17 +35,75 @@ public class Model_Prestazioni implements Steppable {
 	
 	public void step(SimState state) { //il seguente codice faceva parte del processo OnRunEnding del Model di Simio
 		
-		if (Calendario.giorno == 7) {
+		Model model = (Model) state;
 		
-			Model_Prestazioni.allCapDemand = Model_Prestazioni.allCapDemand + CAP.totalDemand; 
+		if (Calendario.giorno == 7) {
+			
+			for (Map.Entry<String, CAP> entry : model.manager.mapCAP.entrySet()) { 
 				
-			Model_Prestazioni.allDemandSatisfied = Model_Prestazioni.allDemandSatisfied + CAP.totalDemandSatisfied;
+				CAP cap = entry.getValue();
 				
-			Model_Prestazioni.totalCost = Model_Prestazioni.totalCost + CAP.transpCost;
+				cap.numberOfTrip = Math.ceil(cap.weekDemandSatisfied/model.TRANSP_CAPACITY);
 				
-			Model_Prestazioni.toCapCost = Model_Prestazioni.toCapCost + CAP.transpCost;
+				cap.transpCost = cap.numberOfTrip * cap.distanceFromDc * model.KM_COST;
+			
+				cap.kmTravelled = cap.numberOfTrip * cap.distanceFromDc;
 				
-			Model_Prestazioni.serviceLevel = Model_Prestazioni.allDemandSatisfied / Model_Prestazioni.allCapDemand;
+				allCapDemand = allCapDemand + cap.weeklyDemandValue;
+				
+				allDemandSatisfied = allDemandSatisfied + cap.weekDemandSatisfied;
+			
+				totalCost = totalCost + cap.transpCost;
+				
+				toCapCost = toCapCost + cap.transpCost;
+				
+				toCapKm = toCapKm + cap.kmTravelled;
+				
+				cap.weekDemandSatisfied = 0;
+			}
+			
+			for (Map.Entry<String, DFL> entry : model.manager.mapDFL.entrySet()) {
+				
+				DFL dfl = entry.getValue();
+				
+				dfl.numberOfTrip = Math.ceil(dfl.weekVolSatisfied/model.TRANSP_CAPACITY);
+				
+				dfl.transpCost = dfl.numberOfTrip * dfl.kmVolDFTDFL[0] * model.KM_COST;
+			
+				dfl.kmTravelled = dfl.numberOfTrip * dfl.kmVolDFTDFL[0];
+				
+				totalCost = totalCost + dfl.transpCost;
+				
+				toDFLCost = toDFLCost + dfl.transpCost;
+			
+				toDFLKm = toDFLKm + dfl.kmTravelled;
+			
+				dfl.weekVolSatisfied = 0;
+			}
+			
+			for (Map.Entry<String, DFT> entry : model.manager.mapDFT.entrySet()) { 
+				
+				DFT dft = entry.getValue();
+				
+				for (Map.Entry<String, Plant> entry2 : model.manager.mapPlant.entrySet()) {	
+					
+					Plant plant = entry2.getValue();
+					
+					dft.numberOfTrip = Math.ceil(dft.volPlantDFT[plant.numeroIDPlant-1]/dft.PLANT_DFT_CAPACITY_TRANSP);			
+					
+					dft.plantDFTCost = dft.numberOfTrip * dft.kmPlantDFT[plant.numeroIDPlant-1] * plant.KM_COST;
+					
+					dft.kmTravelled = dft.numberOfTrip * dft.kmPlantDFT[plant.numeroIDPlant-1];
+					
+					totalCost = totalCost + dft.plantDFTCost;
+					
+					toDFTCost = toDFTCost + dft.plantDFTCost;
+				
+					toDFTKm = toDFTKm + dft.kmTravelled;
+				}
+			}
+				
+			serviceLevel = allDemandSatisfied / allCapDemand;
 		
 			//System.out.println(this);
 			

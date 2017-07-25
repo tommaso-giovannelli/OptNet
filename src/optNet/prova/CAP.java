@@ -22,12 +22,14 @@ public class CAP implements Steppable {
 	public DFL DFLassociato; //il DFL che serve il CAP (è null se il CAP è servito da un DFT)
 
 	public double weeklyDemandValue; //domanda settimanale generata dal CAP 
+	
+	public double CAPWeeklyDemandMin;
+	
+	public double CAPWeeklyDemandMedio;
+	
+	public double CAPWeeklyDemandMax;
 
 	public double actualDemand; //domanda attuale (comprende anche la domanda non soddisfatta nelle settimane precedenti)
-	
-	public static double totalDemand = 0; //domanda totale che il CAP ha generato dall'inizio della simulazione 
-	
-	public static double totalDemandSatisfied = 0; //domanda totale del CAP che è stata soddisfatta dall'inizio della simulazione
 	
 	public double weekDemandSatisfied; //domanda soddisfatta nella settimana considerata
 	
@@ -35,16 +37,19 @@ public class CAP implements Steppable {
 	
 	public double numberOfTrip; //numero di viaggi compiuti dal mezzo di trasporto tra il CAP e il DFT/DFL dall'inizio della simulazione
 	
-	public static double transpCost = 0; //costo totale di trasporto per raggiungere il CAP dal DFL
+	public double transpCost = 0; //costo totale di trasporto per raggiungere il CAP dal DFL
 			
 	public double kmTravelled; //numero di km percorsi per raggiungere il CAP dal DFL
 	
 	//costruttore
-	public CAP(String name, Double2D posizione, double CAPWeeklyDemand) {
+	public CAP(String name, Double2D posizione, double CAPWeeklyDemandMin, double CAPWeeklyDemandMedio, double CAPWeeklyDemandMax) {
 		super();
 		this.name = name;
 		this.posizione = posizione;
-		this.weeklyDemandValue = CAPWeeklyDemand;
+		this.weeklyDemandValue = 0;
+		this.CAPWeeklyDemandMin = CAPWeeklyDemandMin;
+		this.CAPWeeklyDemandMedio = CAPWeeklyDemandMedio;
+		this.CAPWeeklyDemandMax = CAPWeeklyDemandMax;
 		this.actualDemand = 0;
 		this.weekDemandSatisfied = 0;
 		this.numberOfTrip = 0;
@@ -135,11 +140,11 @@ public class CAP implements Steppable {
 	public String toString() {
 		return "CAP [name=" + name + ", posizione=" + posizione 
 			//	+ ", DFTassociato=" + DFTassociato.name + ", DFLassociato=" + DFLassociato.name +
-			//	", weeklyDemandValue=" + weeklyDemandValue + ", actualDemand=" + actualDemand
+				+ ", weeklyDemandValue=" + weeklyDemandValue + ", actualDemand=" + actualDemand
 			//	+ ", totalDemand=" + totalDemand + ", totalDemandSatisfied=" + totalDemandSatisfied
-			//	+ ", weekDemandSatisfied=" + weekDemandSatisfied + ", distanceFromDc=" + distanceFromDc
-			//	+ ", numberOfTrip=" + numberOfTrip + ", transpCost=" + transpCost + ", kmTravelled=" + kmTravelled
-			//	+ "]"
+				+ ", weekDemandSatisfied=" + weekDemandSatisfied + ", distanceFromDc=" + distanceFromDc
+				+ ", numberOfTrip=" + numberOfTrip + ", transpCost=" + transpCost + ", kmTravelled=" + kmTravelled
+				+ "]"
 				;
 	}
 

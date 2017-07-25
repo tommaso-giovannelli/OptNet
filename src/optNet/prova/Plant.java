@@ -94,8 +94,8 @@ public class Plant implements Steppable {
 	public String toString() {
 		return "Plant [name=" + name + ", posizione=" + posizione 
 			//	+ ", listaDFT=" + listaDFT +
-			//	", orderVector="
-			//	+ Arrays.toString(orderVector) + ", qtaProdotta=" + Arrays.toString(qtaProdotta) 
+				+ ", orderVector="
+				+ Arrays.toString(orderVector) + ", qtaProdotta=" + Arrays.toString(qtaProdotta) 
 				+ "]";
 	}
 	

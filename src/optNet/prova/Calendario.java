@@ -6,7 +6,6 @@ import sim.engine.Steppable;
 public class Calendario implements Steppable {
 	
 	public static int giorno;
-	public static int contatoreGiorni;
 	public static int settimane;
 	public static int steps;
 	public int contatoreRepliche;
@@ -38,7 +37,7 @@ public class Calendario implements Steppable {
 				model.schedule.reset();
 				model.start();
 				contatoreRepliche++;
-			}
+			} 
 		} else {
 			model.finish();
 		}

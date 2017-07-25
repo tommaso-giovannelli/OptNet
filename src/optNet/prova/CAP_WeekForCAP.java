@@ -1,5 +1,7 @@
 package optNet.prova;
 
+import org.apache.commons.math3.distribution.TriangularDistribution;
+
 import sim.engine.SimState;
 import sim.engine.Steppable;
 
@@ -14,13 +16,15 @@ public class CAP_WeekForCAP implements Steppable {
 	
 	public void step(SimState state) { //processo CapDemand --> viene lanciato all'inizio della settimana
 		
+		Model model = (Model) state;
+		
 		if (Calendario.giorno == 1) {
 			
-			Model model = (Model) state;
+			TriangularDistribution CAPWeeklyDemand = new TriangularDistribution(new MTFApache(model.random), cap.CAPWeeklyDemandMin, cap.CAPWeeklyDemandMedio, cap.CAPWeeklyDemandMax);
 		
+			cap.weeklyDemandValue = CAPWeeklyDemand.sample();
+			
 			cap.actualDemand = cap.actualDemand + cap.weeklyDemandValue;
-		
-			CAP.totalDemand = CAP.totalDemand + cap.weeklyDemandValue;
 				
 			if (cap.DFTassociato != null) {
 				cap.DFTassociato.dFTWeeklyDemand = cap.DFTassociato.dFTWeeklyDemand + cap.weeklyDemandValue;
@@ -30,7 +34,6 @@ public class CAP_WeekForCAP implements Steppable {
 				throw new IllegalStateException("ATTENZIONE: Non è vero che il CAP è collegato a un DFT o un DFL");
 			}
 	    
-			//System.out.println("CAP_WeekForCAP" + cap.name + " " + Calendario.giorno + " " + Calendario.steps);
 		}
 		
 	}

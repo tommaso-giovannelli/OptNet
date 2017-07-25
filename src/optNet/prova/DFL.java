@@ -60,7 +60,7 @@ public class DFL implements Steppable {
 		this.S = S;
 		this.EOQ = EOQ;
 		this.inventoryWeight = initialStock;
-		this.kmVolDFTDFL = new double[1]; 
+		this.kmVolDFTDFL = new double[2]; 
 		this.CAPassociati = new ArrayList<CAP>();
 	}
 	
@@ -128,8 +128,8 @@ public class DFL implements Steppable {
 		return "DFL [name=" + name + ", posizione=" + posizione 
 			//	+ ", DFTassociato=" + DFTassociato.name 
 			//	+ ", CAPassociati=" + CAPassociati  
-			//	+ ", dFLWeeklyDemand=" + dFLWeeklyDemand + ", dFTOrder=" + dFTOrder
-			//	+ ", weekVolSatisfied=" + weekVolSatisfied + ", inventoryWeight=" + inventoryWeight + "]"
+				+ ", dFLWeeklyDemand=" + dFLWeeklyDemand + ", dFTOrder=" + dFTOrder
+				+ ", weekVolSatisfied=" + weekVolSatisfied + ", inventoryWeight=" + inventoryWeight + "]"
 				;
 	}
 	

@@ -51,7 +51,6 @@ public class DFT implements Steppable {
 		this.name = name;
 		this.posizione = posizione;
 		this.dFTWeeklyDemand = 0;
-		this.plantOrder = 0;
 		this.orderFromDFL = 0;
 		this.s_ = s_;
 		this.S = S;
@@ -114,9 +113,9 @@ public class DFT implements Steppable {
 	public String toString() {
 		return "DFT [name=" + name + ", posizione=" + posizione  
 			//	+ ", CAPassociati=" + CAPassociati + ", DFLassociati=" + DFLassociati 
-			//	+ ", dFTWeeklyDemand=" + dFTWeeklyDemand + ", plantOrder=" + plantOrder
-			//	+ ", orderFromDFL=" + orderFromDFL + ", inventoryWeight=" + inventoryWeight + ", volPlantDFT="
-			//	+ Arrays.toString(volPlantDFT) + "]"
+				+ ", dFTWeeklyDemand=" + dFTWeeklyDemand + ", plantOrder=" + plantOrder 
+				+ ", orderFromDFL=" + orderFromDFL + ", inventoryWeight=" + inventoryWeight + ", volPlantDFT="
+				+ Arrays.toString(volPlantDFT) + "]"
 				;
 	}	
 	

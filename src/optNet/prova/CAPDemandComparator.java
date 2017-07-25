@@ -7,12 +7,12 @@ public class CAPDemandComparator implements Comparator<CAP> {
 	@Override
 	public int compare(CAP cap1, CAP cap2) {
 		
-		if (cap1.weeklyDemandValue > cap2.weeklyDemandValue) {
+		if (cap1.actualDemand > cap2.actualDemand) {
 			return -1;
-		} else if (cap1.weeklyDemandValue < cap2.weeklyDemandValue) {
+		} else if (cap1.actualDemand < cap2.actualDemand) {
 			return +1;
 		} else {
-			return 0;
+			return -1;
 		}
 			
 	}

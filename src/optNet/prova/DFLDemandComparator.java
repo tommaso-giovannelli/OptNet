@@ -12,7 +12,7 @@ public class DFLDemandComparator implements Comparator<DFL> {
 		} else if (dfl1.dFTOrder < dfl2.dFTOrder) {
 			return +1;
 		} else {
-			return 0;
+			return -1;
 		}
 			
 	}

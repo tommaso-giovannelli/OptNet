@@ -273,10 +273,10 @@ public class POIReadExcelFile {
 				double valE = cellE.getNumericCellValue();
 				
 				HSSFCell cellF = row.getCell((short) 5);				
-				double valF = cellE.getNumericCellValue();
+				double valF = cellF.getNumericCellValue();
 				
 				HSSFCell cellG = row.getCell((short) 6);				
-				double valG = cellE.getNumericCellValue();
+				double valG = cellG.getNumericCellValue();
 				
 				RigaExcelPlant riga = new RigaExcelPlant(valB,valC,valE,valF,valG);
 				

@@ -40,7 +40,7 @@ public class DFL_DayOfDeliveryTimer implements Steppable  {
 							dfl.inventoryWeight = dfl.inventoryWeight - qtaSpedita;
 							dfl.dFLWeeklyDemand = dfl.dFLWeeklyDemand - qtaSpedita;
 							cap.actualDemand = cap.actualDemand - qtaSpedita;
-							CAP.totalDemandSatisfied = CAP.totalDemandSatisfied + qtaSpedita;
+						//	cap.totalDemandSatisfied = cap.totalDemandSatisfied + qtaSpedita;
 							cap.weekDemandSatisfied = cap.weekDemandSatisfied + qtaSpedita;					
 						} else {
 							break;
