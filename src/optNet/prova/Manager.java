@@ -55,6 +55,15 @@ public class Manager {
 		}		
 	}
 	
+	public void eliminaDFT(String DFTname) {
+		DFT dft = mapDFT.get(DFTname);
+		if (dft == null) {
+			throw new IllegalStateException("ATTENZIONE: il DFT " + DFTname + " non è nella mappa");
+		} else {
+			mapDFT.remove(DFTname);
+		}
+	}
+	
 	public void putDFL(DFL dfl) {
 		DFL old = mapDFL.get(dfl.name);
 		if (old == null) {
@@ -62,6 +71,15 @@ public class Manager {
 		} else {
 			throw new IllegalStateException("ATTENZIONE: il DFL è già presente nella mappa");
 		}		
+	}
+	
+	public void eliminaDFL(String DFLname) {
+		DFL dfl = mapDFL.get(DFLname);
+		if (dfl == null) {
+			throw new IllegalStateException("ATTENZIONE: il DFL " + DFLname + " non è nella mappa");
+		} else {
+			mapDFL.remove(DFLname);
+		}
 	}
 	
 	public void putPlant(Plant plant) {

@@ -28,11 +28,11 @@ public class Plant_OrderFromDFT implements Steppable {
 		}
 		
 		if (Calendario.giorno == (0 + leadTimeInt)) {
-		
-			int indexForDFT = 0;
-		
+			
 			//assegno a orderVector gli ordini dei DFT a cui il Plant è associato
 			for (DFT dft : plant.listaDFT) {
+				
+				int indexForDFT = plant.listaDFT.indexOf(dft);
 				
 				if (plant.orderVector[indexForDFT] > 0) {
 						
@@ -43,14 +43,10 @@ public class Plant_OrderFromDFT implements Steppable {
 					dft.inventoryWeight = dft.inventoryWeight + plant.qtaProdotta[indexForDFT];
 					
 					dft.volPlantDFT[plant.numeroIDPlant-1] = dft.volPlantDFT[plant.numeroIDPlant-1] + plant.qtaProdotta[indexForDFT];
-					
-			///		dft.plantOrder = dft.plantOrder - plant.qtaProdotta[indexForDFT];
-				
-					indexForDFT = indexForDFT + 1;
 				
 				}
 				
-			}
+			} 
 		
 			//System.out.println("Plant_OrderFromDFT" + plant.name + " " + Calendario.giorno + " " + Calendario.steps);
 		}

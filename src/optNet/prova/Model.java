@@ -1,5 +1,9 @@
 package optNet.prova;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -42,20 +46,56 @@ public class Model extends SimState {
 	
 	public int numDFL; //numero dei DFL
 	
-	public Manager manager; //contiene le informazioni di tutti gli oggetti, anche gli impianti associati a monte e a valle
+	public Manager manager; //contiene le informazioni di tutti gli oggetti (anche gli impianti non attivati)
+	
+	public Manager managerMutabile; //contiene le informazioni di tutti e soli gli oggetti attivati
 	
 	public final int NUMERO_SIMULAZIONI = 2;
 	
-	public final int NUMERO_REPLICHE = 2;	
+	public final int NUMERO_REPLICHE = 2;
 	
-	public int LogicaDiRiordino = 1; //1 ROC (R,s,Q)
+	public int contatoreRepliche = 1;
+	
+	public int contatoreSimulazioni = 1;
+	
+	public int LogicaDiRiordino = 2; //1 ROC (R,s,Q)
 									 //2 ROC (R,s,S)
 								     //3 ROL (s,Q)
 								     //4 ROL (s,S)
 	
 	
 	
+	
+	
+	public double allCapDemandMedio; //domanda totale generata dai CAP in media nelle repliche
+	
+	public double allDemandSatisfiedMedio; //domanda totale dei CAP che è stata soddisfatta in media nelle repliche
+	
+	public double serviceLevelMedio; //livello di servizio medio (AllCapDemand/AllDemandSatisfied) 
+	
+	public double totalCostMedio; //costo totale di trasporto medio da sostenere con la configurazione di rete considerata
+	
+	public double toCapCostMedio; //costo totale medio per raggiungere i CAP dai DFT o DFL 
+	
+	public double toDFLCostMedio; //costo totale medio per raggiungere i DFL dai DFT 
+	
+	public double toDFTCostMedio; //costo totale medio per raggiungere i DFT dai Plant 
+	
+	public double toCapKmMedio; //km totali percorsi per raggiungere i CAP dai DFT o DFL in media nelle repliche
+	
+	public double toDFLKmMedio; //km totali percorsi per raggiungere i DFL dai DFT in media nelle repliche
+	
+	public double toDFTKmMedio; //km totali percorsi per raggiungere i DFT dai Plant in media nelle repliche
+	
+	public double qtaTotProdottaMedio; //quantità totale prodotta dai plant in media nelle repliche
+	
+	
+	
+	
+	
 	public Continuous2D modelField = new Continuous2D(1.0,width,height); 
+	
+	
 	
 	
 	
@@ -64,14 +104,21 @@ public class Model extends SimState {
     super(seed);
     }
 	
+
+	
 	
 	
 	/**
 	 * metodo che legge il file sim_legge.txt, crea gli impianti e il manager e riempie quest'ultimo con i Plant, i CAP e i centri di distribuzione attivati 
+	 * @throws Exception 
+	 * @throws IOException 
+	 * @throws FileNotFoundException 
 	 */
-	public void creaImpianti() {
+	public void creaImpianti() throws FileNotFoundException, IOException, Exception {
 		
 		this.manager = new Manager();
+		
+		this.managerMutabile = new Manager();
 		
 		POIReadExcelFile poi = new POIReadExcelFile();
 		
@@ -83,7 +130,7 @@ public class Model extends SimState {
 		
 		List<RigaExcelPlant> listPlant = poi.riempiListaPlant();
 		
-		//crea Plant e CAP leggendoli dai file di input (CAP.csv e Plant.csv) e usando i relativi costruttori (tutti i fields saranno inizializzati a 0 eccetto nome e posizione); aggiungi questi oggetti nel manager
+		//crea tutti i Plant e CAP leggendoli dai file di input (CAP.csv e Plant.csv) e usando i relativi costruttori (tutti i fields saranno inizializzati a 0 eccetto nome e posizione); aggiungi questi oggetti nel manager
 		for (RigaExcelCAP r : listCAP) {
 			
 			Double2D posizione = new Double2D(r.getCoordinataX()+2000000000, r.getCoordinataY()-2000000000); //costruisco la posizione ricavando le coordinate da r
@@ -95,6 +142,8 @@ public class Model extends SimState {
 			CAP cap = new CAP(r.getNome(),posizione,r.getCAPWeeklyDemandMin(), r.getCAPWeeklyDemandMedio(),r.getCAPWeeklyDemandMax()); //costruisco l'oggetto CAP
 			
 			manager.putCAP(cap); //inserisco l'oggetto nel manager
+			
+			managerMutabile.putCAP(cap);
 		}
 		
 		for (RigaExcelPlant r : listPlant) {
@@ -106,11 +155,11 @@ public class Model extends SimState {
 			Plant plant = new Plant(r.getNome(), posizione, r.getPercentDFT(), r.getKmCost());
 			
 			manager.putPlant(plant);
+			
+			managerMutabile.putPlant(plant);
 		}
 		
-		//leggi file sim_legge.txt e determina i DFT e DFL da creare
-		
-		//crea DFT e DFL leggendoli dai file di input (DFT.csv e DFL.csv) e usando i relativi costruttori (tutti i fields saranno inizializzati a 0 eccetto nome e posizione); aggiungi questi oggetti nel manager
+		//crea tutti i DFT e DFL leggendoli dai file di input (DFT.csv e DFL.csv) e usando i relativi costruttori (tutti i fields saranno inizializzati a 0 eccetto nome e posizione); aggiungi questi oggetti nel manager
 		for (RigaExcelDFT r : listDFT) {
 			
 			Double2D posizione = new Double2D(r.getCoordinataX()+2000000000, r.getCoordinataY()-2000000000); //costruisco la posizione ricavando le coordinate da r
@@ -120,6 +169,8 @@ public class Model extends SimState {
 			DFT dft = new DFT(r.getNome(), posizione, r.getS_(), r.getS(), r.getEOQ(), r.getInitialStock()); //costruisco l'oggetto CAP
 			
 			manager.putDFT(dft); //inserisco l'oggetto nel manager
+			
+			managerMutabile.putDFT(dft);
 		}
 		
 		for (RigaExcelDFL r : listDFL) {
@@ -131,34 +182,77 @@ public class Model extends SimState {
 			DFL dfl = new DFL(r.getNome(),posizione, r.getS_(), r.getS(), r.getEOQ(), r.getInitialStock()); //costruisco l'oggetto CAP
 			
 			manager.putDFL(dfl); //inserisco l'oggetto nel manager
+			
+			managerMutabile.putDFL(dfl);
 		}
+		
+		//leggi file sim_legge.txt e determina i DFT e DFL da eliminare per la prima simulazione
+		ReaderFile reader = new ReaderFile();
+				
+		int[] arrayAttivazione = reader.leggiFile(); //nell'array i primi 12 elementi riguardano i DFT, gli altri 248 i DFL
+		
+		for (int i=0; i<arrayAttivazione.length; i++) {
+			if (i<12) {
+				if (arrayAttivazione[i] == 0) {
+					int numeroIdDFT = i+1;
+					String dftName = "DFT" + numeroIdDFT;
+					managerMutabile.eliminaDFT(dftName);
+				}
+			} else {
+				if (arrayAttivazione[i] == 0) {
+					int numeroIdDFL = i-11;
+					String dflName = "DFL" + numeroIdDFL;
+					managerMutabile.eliminaDFL(dflName);
+				}
+			}
+		}		
+		
 	}
 	
 	
+	
+	
+	
 	/**
-	 * dato il manager, il metodo legge il file sim_legge.txt e modifica il manager 
+	 * dato il manager, il metodo legge il file sim_legge.txt e modifica il managerMutabile nelle simulazioni successive alla prima 
+	 * @throws IOException 
+	 * @throws FileNotFoundException 
 	 * @throws Exception 
 	 */
-	public void modificaManager() {
+	public void riempiManagerMutabile() throws FileNotFoundException, IOException, Exception {
 		
 		if (this.manager == null) 
 			throw new NullPointerException("Il manager è vuoto");
 		
-		//leggi file sim_legge.txt
+		managerMutabile.mapDFT.putAll(manager.mapDFT);
 		
-		//determina DFT e DFL da eliminare
+		managerMutabile.mapDFL.putAll(manager.mapDFL);
 		
-		//elimina tali centri dal manager
+		//leggi file sim_legge.txt e determina i DFT e DFL da eliminare per le simulazioni successive alla prima
+		ReaderFile reader = new ReaderFile();
+				
+		int[] arrayAttivazione = reader.leggiFile(); //nell'array i primi 12 elementi riguardano i DFT, gli altri 248 i DFL
 		
-		//determina i DFT e DFL da creare; per crearli leggi info da DFT.csv e DFL.csv
-		
-		//collega ogni DFT creato ai Plant
-		
-		//per ogni DFL cerca il DFT più vicino e memorizzalo come DFTassociato; inoltre aggiungi il DFL nella lista dei DFL serviti dal DFT
-		
-		//per ogni CAP cerca il DFT o DFL più vicino e memorizzalo come impianto associato; inoltre aggiungi il CAP nella lista dei CAP serviti dal DFL
+		for (int i=0; i<arrayAttivazione.length; i++) {
+			if (i<12) {
+				if (arrayAttivazione[i] == 0) {
+					int numeroDFT = i+1;
+					String dftName = "DFT" + numeroDFT;
+					managerMutabile.eliminaDFT(dftName);
+				}
+			} else {
+				if (arrayAttivazione[i] == 0) {
+					int numeroDFL = i-11;
+					String dflName = "DFL" + numeroDFL;
+					managerMutabile.eliminaDFL(dflName);
+				}
+			}
+		}
 	
 	}
+	
+	
+	
 	
 	//metodi getter per il Model Inspector
 	public double getAllCapDemand() {
@@ -200,12 +294,15 @@ public class Model extends SimState {
 	public double getToDFLKm() {
 		return Model_Prestazioni.toDFLKm;
 	}
+	
+	
+	
 		
 	/**
 	 * @return il numero di DFT 
 	 */
 	public int contaDFT() { //conta il numero di oggetti che sono DFT
-		return this.manager.mapDFT.size();
+		return this.managerMutabile.mapDFT.size();
 	}
 	
 	
@@ -213,29 +310,48 @@ public class Model extends SimState {
 	 * @return il numero di DFL
 	 */
 	public int contaDFL() { //conta il numero di oggetti che sono DFT
-		return this.manager.mapDFL.size();
+		return this.managerMutabile.mapDFL.size();
 	}
 	
 	/**
 	 * @return il numero di CAP 
 	 */
 	public int contaCAP() { //conta il numero di oggetti che sono DFT
-		return this.manager.mapCAP.size();
+		return this.managerMutabile.mapCAP.size();
 	}
 	
 	/**
 	 * @return il numero di Plant 
 	 */
 	public int contaPlant() { //conta il numero di oggetti che sono DFT
-		return this.manager.mapPlant.size();
+		return this.managerMutabile.mapPlant.size();
 	}
+	
+	
+	
+	
+	
 	
 	//il metodo start fa iniziare la simulazione	
 	public void start() { ////////////MASON
 		
 		super.start();
 		
-		creaImpianti();
+		try {
+			
+			if (this.contatoreSimulazioni == 1) { 
+				creaImpianti();
+			} else {
+				riempiManagerMutabile();
+			} 
+			
+		} catch (FileNotFoundException e) {
+			System.out.println(e);
+		} catch (IOException e) {
+			System.out.println(e);
+		} catch (Exception e) {
+			System.out.println(e);
+		} 
 		
 		numDFT = contaDFT();
 		
@@ -246,7 +362,7 @@ public class Model extends SimState {
 		schedule.scheduleRepeating(Schedule.EPOCH,0,calendario);
 		
 		//inserisco nello Schedule gli impianti memorizzati nel manager 
-			for (Map.Entry<String, CAP> entry : manager.mapCAP.entrySet()) { /////CAP
+			for (Map.Entry<String, CAP> entry : managerMutabile.mapCAP.entrySet()) { /////CAP
 				CAP cap = entry.getValue();
 				modelField.setObjectLocation(cap, cap.posizione );
 				schedule.scheduleOnce(Schedule.EPOCH, 0, cap);
@@ -256,7 +372,7 @@ public class Model extends SimState {
 				schedule.scheduleOnce(Schedule.EPOCH,Integer.MAX_VALUE,azzeraCAP);
 			}
 			
-			for (Map.Entry<String, DFL> entry : manager.mapDFL.entrySet()) { /////DFL
+			for (Map.Entry<String, DFL> entry : managerMutabile.mapDFL.entrySet()) { /////DFL
 				DFL dfl = entry.getValue();
 				modelField.setObjectLocation(dfl, dfl.posizione );
 				schedule.scheduleOnce(Schedule.EPOCH, 0, dfl);
@@ -275,7 +391,7 @@ public class Model extends SimState {
 				schedule.scheduleOnce(Schedule.EPOCH,Integer.MAX_VALUE,azzeraDFL);
 			}
 			
-			for (Map.Entry<String, DFT> entry : manager.mapDFT.entrySet()) { /////DFT
+			for (Map.Entry<String, DFT> entry : managerMutabile.mapDFT.entrySet()) { /////DFT
 				DFT dft = entry.getValue();
 				modelField.setObjectLocation(dft, dft.posizione );
 				schedule.scheduleOnce(Schedule.EPOCH, 0, dft);
@@ -294,7 +410,7 @@ public class Model extends SimState {
 				schedule.scheduleOnce(Schedule.EPOCH,Integer.MAX_VALUE,azzeraDFT);
 			}
 			
-			for (Map.Entry<String, Plant> entry : manager.mapPlant.entrySet()) { /////Plant
+			for (Map.Entry<String, Plant> entry : managerMutabile.mapPlant.entrySet()) { /////Plant
 				Plant plant = entry.getValue();
 				modelField.setObjectLocation(plant, plant.posizione );
 				schedule.scheduleOnce(Schedule.EPOCH, 0, plant);
@@ -314,30 +430,27 @@ public class Model extends SimState {
 	}	
 
 	
-	public static void main(String[] args) { ////////////MASON
-		
 	
+	
+	
+	public static void main(String[] args) throws FileNotFoundException, IOException, Exception { ////////////MASON
+		
+
 		Model model = new Model(System.currentTimeMillis());
 		
 		model.nameThread();
 		
-		int contatoreSimulazioni = 1;
+		while (model.contatoreSimulazioni <= model.NUMERO_SIMULAZIONI) {
+			
+			model.contatoreRepliche = 1;
 		
-		while (contatoreSimulazioni <= model.NUMERO_SIMULAZIONI) {
-			
-			//inserire codice per leggere info da sim_legge.txt
-			
-			int contatoreRepliche = 1;
-			
-		//	model.modificaGrafo();
-			
-			while(contatoreRepliche <= model.NUMERO_REPLICHE) {
+			while(model.contatoreRepliche <= model.NUMERO_REPLICHE) {
 				
-				System.out.println("\nSimulazione numero " + contatoreSimulazioni + " - Replica numero " + contatoreRepliche);
-				
+				System.out.println("\nSimulazione numero " + model.contatoreSimulazioni + " - Replica numero " + model.contatoreRepliche);
+					
 	    		model.schedule.reset();
 				
-				model.setJob(contatoreRepliche);
+				model.setJob(model.contatoreRepliche);
 				
 	    		model.start();
 	    		
@@ -349,32 +462,87 @@ public class Model extends SimState {
 	    				break;
 	    			steps = model.schedule.getSteps();
 	    			
-	    		} while(steps < 364);
+	    		} while(steps < 365); 
 	    		
-	    		contatoreRepliche++ ;
+	    		model.contatoreRepliche++ ;
 	    		
-	    		//inserire codice per memorizzare il costo totale e il livello di servizio del singolo run
-	    		
-			}
+			}  
 			
-			//inserire codice per calcolare il valor medio del costo totale e del livello di servizio ottenuti nelle varie repliche
+			//codice per riempire il file sim_scrive.txt da dare in input all'ottimizzatore;
+			WriterFile writer = new WriterFile();
 			
-			//inserire codice per riempire il file opt_legge.txt da dare in input all'ottimizzatore;
+			writer.scriviFile(model);
+			
+			Model_Prestazioni.allCapDemandTot = 0; 
+			
+			Model_Prestazioni.allDemandSatisfiedTot = 0; 
+			
+			Model_Prestazioni.serviceLevelTot = 0;
+			
+			Model_Prestazioni.totalCostTot = 0; 
+			
+			Model_Prestazioni.toCapCostTot = 0; 
+			
+			Model_Prestazioni.toDFLCostTot = 0; 
+			
+			Model_Prestazioni.toDFTCostTot = 0; 
+			
+			Model_Prestazioni.toCapKmTot = 0; 
+			
+			Model_Prestazioni.toDFLKmTot = 0; 
+			
+			Model_Prestazioni.toDFTKmTot = 0; 
+			
+			Model_Prestazioni.qtaTotProdottaTot = 0;
+			
+			model.allCapDemandMedio = 0; 
+			
+			model.allDemandSatisfiedMedio = 0; 
+			
+			model.serviceLevelMedio = 0; 
+			
+			model.totalCostMedio = 0; 
+			
+			model.toCapCostMedio = 0; 
+			
+			model.toDFLCostMedio = 0; 
+			
+			model.toDFTCostMedio = 0; 
+			
+			model.toCapKmMedio = 0; 
+			
+			model.toDFLKmMedio = 0; 
+			
+			model.toDFTKmMedio = 0; 
+			
+			model.qtaTotProdottaMedio = 0;
 			
 			//vedi pag 66 della tesi di marco per i diagrammi di flusso dell'ottimizzatore e del simulatore
 			
-			model.finish();
+		    //model.finish();
 			
-			contatoreSimulazioni++;
+			try{
+	            Process pr = Runtime.getRuntime().exec("main.exe");
+	        //    InputStream in = pr.getInputStream();
+	        //    OutputStream out = pr.getOutputStream();
+	        //    InputStream err = pr.getErrorStream();
+	        }catch(Exception e){
+	            e.printStackTrace();
+	        }
+			
+			Thread.sleep(10000);
+			
+			model.contatoreSimulazioni++;
 		}
 		
 		System.exit(0);  // make sure any threads finish up
-		
-		/*
+
+/*		
+
 		doLoop(Model.class, args);
 		System.exit(0);
-		*/
-		
+	
+*/		
 	}
 
 }

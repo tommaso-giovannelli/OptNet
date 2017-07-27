@@ -12,7 +12,7 @@ public class CAPDemandComparator implements Comparator<CAP> {
 		} else if (cap1.actualDemand < cap2.actualDemand) {
 			return +1;
 		} else {
-			return -1;
+			return 0;
 		}
 			
 	}

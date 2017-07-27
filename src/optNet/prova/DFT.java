@@ -71,7 +71,7 @@ public class DFT implements Steppable {
 		
 		this.kmPlantDFT = new double[model.NUM_PLANT]; 
 		
-		for (Map.Entry<String, Plant> entry : model.manager.mapPlant.entrySet()) {
+		for (Map.Entry<String, Plant> entry : model.managerMutabile.mapPlant.entrySet()) {
 			Plant plant = entry.getValue();
 			kmPlantDFT[plant.numeroIDPlant-1] = this.posizione.distance(plant.posizione); //processo OnRunInitialized
 		}

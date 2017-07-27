@@ -34,7 +34,7 @@ public class DFT_ROL implements Steppable {
 					throw new IllegalStateException("ATTENZIONE: la logica di riordino deve essere ROL");
 				}
 			
-				for (Map.Entry<String, Plant> entry : model.manager.mapPlant.entrySet()) {
+				for (Map.Entry<String, Plant> entry : model.managerMutabile.mapPlant.entrySet()) {
 				
 					Plant plant = entry.getValue();
 				

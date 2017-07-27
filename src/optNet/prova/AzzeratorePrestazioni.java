@@ -32,6 +32,8 @@ public class AzzeratorePrestazioni implements Steppable {
 			Model_Prestazioni.toDFLKm = 0; 
 			
 			Model_Prestazioni.toDFTKm = 0; 
+			
+			Model_Prestazioni.qtaTotProdotta = 0;
 		
 		}
 	}

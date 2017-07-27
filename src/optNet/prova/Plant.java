@@ -40,7 +40,7 @@ public class Plant implements Steppable {
 	
 	public void impostaListaDFT(Model model) {
 		
-		for (Map.Entry<String, DFT> entry : model.manager.mapDFT.entrySet()) {
+		for (Map.Entry<String, DFT> entry : model.managerMutabile.mapDFT.entrySet()) {
 			DFT dft = entry.getValue();
 			listaDFT.add(dft);
 		}
@@ -56,6 +56,7 @@ public class Plant implements Steppable {
 		orderVector = new double[model.numDFT]; 
 		
 		qtaProdotta = new double[model.numDFT]; 
+
 		
 	}
 	

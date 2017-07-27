@@ -65,7 +65,7 @@ public class CAP implements Steppable {
 		double distanza;
 		double bestDistanza = Double.MAX_VALUE;
 		
-		for (Map.Entry<String, DFT> entry : model.manager.mapDFT.entrySet()) { /////DFT
+		for (Map.Entry<String, DFT> entry : model.managerMutabile.mapDFT.entrySet()) { /////DFT
 			DFT dft = entry.getValue();
 			distanza = this.posizione.distance(dft.posizione);
 			if (distanza < bestDistanza) {
@@ -75,7 +75,7 @@ public class CAP implements Steppable {
 			}
 		}
 		
-		for (Map.Entry<String, DFL> entry : model.manager.mapDFL.entrySet()) { /////DFT
+		for (Map.Entry<String, DFL> entry : model.managerMutabile.mapDFL.entrySet()) { /////DFT
 			DFL dfl = entry.getValue();
 			distanza = this.posizione.distance(dfl.posizione);
 			if (distanza < bestDistanza) {
